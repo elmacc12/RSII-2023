@@ -1,5 +1,5 @@
-using eDentist.Model;
-using eDentist.Services;
+using eDentist.Services.Database;
+using eDentist.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eDentist.Controllers
@@ -12,14 +12,14 @@ namespace eDentist.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public ProductsController(ILogger<WeatherForecastController> logger,IProductService productService)
+        public ProductsController(ILogger<WeatherForecastController> logger, IProductService productService)
         {
             _logger = logger;
             _productService = productService;
         }
 
         [HttpGet()]
-        public IEnumerable<Products> Get()
+        public IEnumerable<Product> Get()
         {
             return _productService.GetProducts();
         }
