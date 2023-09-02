@@ -22,17 +22,22 @@ namespace eDentist.Services.Services
             _mapper = mapper;
         }
 
-        public virtual async Task<List<T>> Get(TSearch search=null)
+        public virtual async Task<PagedResult<T>> Get(TSearch search=null)
         {
             var query=_context.Set<TDb>().AsQueryable();
+            PagedResult<T> result = new PagedResult<T>();
+           
             query = AddFilter(query, search);
+            result.Count = await query.CountAsync();
             if (search?.Page.HasValue == true && search.PageSize.HasValue == true)
             {
                 query=query.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);
             }
 
             var list= await query.ToListAsync();
-            return _mapper.Map<List<T>>(list);
+            var tmp= _mapper.Map<List<T>>(list);
+            result.Result = tmp;
+            return result;
             
         }
         public virtual IQueryable<TDb> AddFilter(IQueryable<TDb> query,TSearch? search = null)
