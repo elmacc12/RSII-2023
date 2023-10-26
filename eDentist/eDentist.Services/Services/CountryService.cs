@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using eDentist.Model.Models;
 using eDentist.Model.Requests;
+using eDentist.Model.SearchObjects;
 using eDentist.Services.Database;
 using eDentist.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -12,24 +13,11 @@ using System.Threading.Tasks;
 
 namespace eDentist.Services.Services
 {
-    public class CountryService : ICountryService
+    public class CountryService : BaseCrudService<CountryModel,Country,BaseSearchObject,CountryInsertRequest,CountryUpdateRequest>,ICountryService
     {
-        EDentistDbContext _context;
-        public IMapper _mapper { get; set; }
 
-        public CountryService(EDentistDbContext c, IMapper mapper)
-        {
-            _context = c;
-            _mapper = mapper;
-        }
-        public CountryModel Insert(CountryInsertRequest r)
-        {
-            var country = new Country();
-            _mapper.Map(r,country);
-            _context.Countries.Add(country);
-            _context.SaveChanges();
-            return _mapper.Map<CountryModel>(country);
+        public CountryService(EDentistDbContext c, IMapper mapper) : base(c, mapper) { }
 
-        }
+
     }
 }

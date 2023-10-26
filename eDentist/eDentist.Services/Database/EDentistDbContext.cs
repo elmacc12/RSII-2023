@@ -17,8 +17,6 @@ public partial class EDentistDbContext : DbContext
 
     public virtual DbSet<City> Cities { get; set; }
 
-    public virtual DbSet<Color> Colors { get; set; }
-
     public virtual DbSet<Country> Countries { get; set; }
 
     public virtual DbSet<DentalService> DentalServices { get; set; }
@@ -36,10 +34,9 @@ public partial class EDentistDbContext : DbContext
     public virtual DbSet<ProductType> ProductTypes { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-SIVU0CC;Initial Catalog=eDentistDB;Integrated Security=True;TrustServerCertificate=True");
+    public virtual DbSet<Roles> Roles { get; set; }
+    public virtual DbSet<UserRoles> UserRoles { get; set; }
+    public virtual DbSet<Color> Color { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,26 +47,12 @@ public partial class EDentistDbContext : DbContext
             entity.ToTable("City");
 
             entity.Property(e => e.CityId).HasColumnName("CityID");
-            entity.Property(e => e.CityName)
-                .HasMaxLength(1)
-                .IsUnicode(false);
+  
             entity.Property(e => e.CountryId).HasColumnName("CountryID");
 
             entity.HasOne(d => d.Country).WithMany(p => p.Cities)
                 .HasForeignKey(d => d.CountryId)
                 .HasConstraintName("fk_country_city");
-        });
-
-        modelBuilder.Entity<Color>(entity =>
-        {
-            entity.HasKey(e => e.ColorId).HasName("PK__Color__8DA7676DDE1BD242");
-
-            entity.ToTable("Color");
-
-            entity.Property(e => e.ColorId).HasColumnName("ColorID");
-            entity.Property(e => e.ColorName)
-                .HasMaxLength(1)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Country>(entity =>
@@ -79,9 +62,6 @@ public partial class EDentistDbContext : DbContext
             entity.ToTable("Country");
 
             entity.Property(e => e.CountryId).HasColumnName("CountryID");
-            entity.Property(e => e.Name)
-                .HasMaxLength(1)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<DentalService>(entity =>
@@ -173,16 +153,14 @@ public partial class EDentistDbContext : DbContext
             entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED012064AE");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
-            entity.Property(e => e.ProductColorId).HasColumnName("ProductColorID");
+     
             entity.Property(e => e.ProductDescription).HasColumnType("text");
             entity.Property(e => e.ProductName)
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.ProductTypeId).HasColumnName("ProductTypeID");
 
-            entity.HasOne(d => d.ProductColor).WithMany(p => p.Products)
-                .HasForeignKey(d => d.ProductColorId)
-                .HasConstraintName("fk_product_color");
+          
 
             entity.HasOne(d => d.ProductType).WithMany(p => p.Products)
                 .HasForeignKey(d => d.ProductTypeId)
@@ -206,29 +184,13 @@ public partial class EDentistDbContext : DbContext
             entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC6A8E000D");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
-            entity.Property(e => e.Adress)
-                .HasMaxLength(1)
-                .IsUnicode(false);
+            
             entity.Property(e => e.CityId).HasColumnName("CityID");
-            entity.Property(e => e.Email)
-                .HasMaxLength(1)
-                .IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(1)
-                .IsUnicode(false);
-            entity.Property(e => e.Password)
-                .HasMaxLength(1)
-                .IsUnicode(false);
-            entity.Property(e => e.Surname)
-                .HasMaxLength(1)
-                .IsUnicode(false);
-            entity.Property(e => e.Username)
-                .HasMaxLength(1)
-                .IsUnicode(false);
-            entity.Property(e => e.ZipCode)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .HasColumnName("ZIP_Code");
+          
+         
+           
+          
+            entity.Property(e => e.ZipCode).HasColumnName("ZIP_Code");
 
             entity.HasOne(d => d.City).WithMany(p => p.Users)
                 .HasForeignKey(d => d.CityId)

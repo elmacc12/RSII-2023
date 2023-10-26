@@ -1,27 +1,29 @@
+using eDentist.Model.Models;
+using eDentist.Model.Requests;
+using eDentist.Model.SearchObjects;
 using eDentist.Services.Database;
 using eDentist.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eDentist.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProductsController : ControllerBase
+    [AllowAnonymous]
+    public class ProductsController : BaseCrudController<ProductModel, ProductSearchObject, ProductInsertRequest, ProductUpdateRequest>
     {
-        private readonly IProductService _productService;
-
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public ProductsController(ILogger<WeatherForecastController> logger, IProductService productService)
+        public ProductsController(ILogger<BaseController<ProductModel, ProductSearchObject>> logger, IProductService service) : base(logger,service)
         {
-            _logger = logger;
-            _productService = productService;
+
         }
 
-        [HttpGet()]
-        public IEnumerable<Product> Get()
+        [HttpPut("{id}/activate")]
+        public virtual async Task<ProductModel> Activate(int id)
         {
-            return _productService.GetProducts();
+            return await (_service as IProductService).Activate(id);
         }
+
     }
+
 }

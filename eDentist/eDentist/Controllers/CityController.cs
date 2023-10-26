@@ -9,9 +9,9 @@ namespace eDentist.Controllers
 {
     [ApiController]
     [AllowAnonymous]
-    public class CityController : BaseController<CityModel,CitySearch>
+    public class CityController : BaseCrudController<CityModel,CitySearch,CityInsertRequest,CityUpdateRequest>
     {
-        public CityController(ICityService service, ILogger<BaseController<CityModel,CitySearch>> logger) : base(service, logger)
+        public CityController(ICityService service, ILogger<BaseController<CityModel,CitySearch>> logger) : base(logger,service)
         {
         }
     }

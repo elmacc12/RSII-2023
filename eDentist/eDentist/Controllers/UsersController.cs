@@ -1,4 +1,6 @@
 ﻿using eDentist.Model;
+using eDentist.Model.Requests;
+using eDentist.Model.SearchObjects;
 using eDentist.Services.Database;
 using eDentist.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -7,19 +9,13 @@ namespace eDentist.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseCrudController<UserModel, UsersSearchObject, UsersInsertRequest, UserUpdateRequest>
     {
-        private readonly IUsersService _service;
-        public UsersController(IUsersService service)
+        public UsersController(ILogger<BaseController<UserModel, UsersSearchObject>> logger, IUsersService service) : base(logger,service)
         {
-            _service = service;
+
         }
 
-        [HttpGet]
-        public IEnumerable<UserModel> Get()
-        {
-            return _service.Get();
-        }
 
     }
 }

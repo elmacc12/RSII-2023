@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace eDentist.Services.Interfaces
 {
-    public interface ICityService:IService<CityModel,CitySearch>
+    public interface ICityService:IBaseCrudService<CityModel,CitySearch,CityInsertRequest,CityUpdateRequest>
     {
        // CityModel Insert(CityInsertRequest r);
     }

@@ -3,6 +3,7 @@ using eDentist.Model.SearchObjects;
 using eDentist.Services;
 using eDentist.Services.Database;
 using eDentist.Services.Interfaces;
+using eDentist.Services.ProizvodiStateMachine;
 using eDentist.Services.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,13 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddTransient<ICityService, CityService>();
 builder.Services.AddTransient<ICountryService, CountryService>();
+builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<BaseState>();
+builder.Services.AddTransient<InitialProductState>();
+builder.Services.AddTransient<DraftProductState>();
+builder.Services.AddTransient<ActiveProductState>();
+builder.Services.AddTransient<IProductTypeService, ProductTypeService>();
+builder.Services.AddTransient<IColorService, ColorService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

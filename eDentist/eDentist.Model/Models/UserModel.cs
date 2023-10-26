@@ -1,4 +1,5 @@
-﻿using System;
+﻿using eDentist.Model.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,6 @@ namespace eDentist.Model
         public string? ZipCode { get; set; }
 
         public int? CityId { get; set; }
-
+        public virtual ICollection<UserRolesModel> UserRoles { get; } = new List<UserRolesModel>();
     }
 }

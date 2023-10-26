@@ -1,4 +1,7 @@
 ﻿using eDentist.Model;
+using eDentist.Model.Models;
+using eDentist.Model.Requests;
+using eDentist.Model.SearchObjects;
 using eDentist.Services.Database;
 using System;
 using System.Collections.Generic;
@@ -9,8 +12,8 @@ using System.Threading.Tasks;
 
 namespace eDentist.Services.Interfaces
 {
-    public interface IProductService
+    public interface IProductService:IBaseCrudService<ProductModel,ProductSearchObject,ProductInsertRequest,ProductUpdateRequest>
     {
-        IList<Product> GetProducts();
+        Task<ProductModel> Activate(int id);
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace eDentist.Services.Services
 {
-    public class CityService : BaseService<CityModel,City,CitySearch>,ICityService
+    public class CityService : BaseCrudService<CityModel, City, CitySearch, CityInsertRequest, CityUpdateRequest>,ICityService
     {
       
 

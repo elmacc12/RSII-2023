@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eDentist.Services.Database;
 
@@ -16,12 +17,13 @@ public partial class Product
     public int? QuantityLeft { get; set; }
 
     public int? ProductTypeId { get; set; }
+    [ForeignKey("ColorID")]
+    public Color Color { get; set; }
+    public int ColorID { get; set; }
 
-    public int? ProductColorId { get; set; }
+    public string StateMachine { get; set; }
 
     public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
-
-    public virtual Color? ProductColor { get; set; }
 
     public virtual ProductType? ProductType { get; set; }
 }
