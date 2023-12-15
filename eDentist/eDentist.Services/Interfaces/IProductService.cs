@@ -15,5 +15,7 @@ namespace eDentist.Services.Interfaces
     public interface IProductService:IBaseCrudService<ProductModel,ProductSearchObject,ProductInsertRequest,ProductUpdateRequest>
     {
         Task<ProductModel> Activate(int id);
+        Task<ProductModel> Hide(int id);
+        Task<List<string>> AllowedActions(int id);
     }
 }

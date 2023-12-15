@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace eDentist.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
     public class ProductTypeController : BaseCrudController<ProductTypeModel, BaseSearchObject, ProductTypeInsertRequest, ProductTypeUpdateRequest>
     {
         public ProductTypeController(IProductTypeService service, ILogger<BaseController<ProductTypeModel, BaseSearchObject>> logger) : base(logger, service)

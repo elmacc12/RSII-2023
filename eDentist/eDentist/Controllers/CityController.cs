@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace eDentist.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
     public class CityController : BaseCrudController<CityModel,CitySearch,CityInsertRequest,CityUpdateRequest>
     {
         public CityController(ICityService service, ILogger<BaseController<CityModel,CitySearch>> logger) : base(logger,service)

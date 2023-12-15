@@ -34,7 +34,8 @@ namespace eDentist.Services.Helpers
             CreateMap<ColorInsertRequest, Color>();
             CreateMap<ColorUpdateRequest, Color>();
             //CreateMap<ProductUpdateRequest, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-           
+            CreateMap<UsersInsertRequest, User>();
+            CreateMap<UserUpdateRequest, User>();
         }
     }
 }

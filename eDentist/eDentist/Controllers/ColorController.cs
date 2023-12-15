@@ -8,11 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace eDentist.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
     public class ColorController: BaseCrudController<ColorModel, BaseSearchObject, ColorInsertRequest, ColorUpdateRequest>
     {
         public ColorController(IColorService service, ILogger<BaseController<ColorModel, BaseSearchObject>> logger) : base(logger, service)
         {
+        }
+
+        [Authorize(Roles ="Administrator")]
+        public override Task<ColorModel> Insert([FromBody] ColorInsertRequest insert)
+        {
+            return base.Insert(insert);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace eDentist.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [AllowAnonymous]
+ 
     public class CountryController: BaseCrudController<CountryModel, BaseSearchObject, CountryInsertRequest, CountryUpdateRequest>
     {
 

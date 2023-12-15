@@ -3,6 +3,7 @@ using eDentist.Model.Requests;
 using eDentist.Model.SearchObjects;
 using eDentist.Services.Database;
 using eDentist.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eDentist.Controllers

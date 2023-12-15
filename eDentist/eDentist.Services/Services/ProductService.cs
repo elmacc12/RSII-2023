@@ -41,5 +41,20 @@ namespace eDentist.Services.Services
 
             return await state.Activate(id);
         }
+        public async Task<ProductModel> Hide(int id)
+        {
+            var entity = await _context.Products.FindAsync(id);
+
+            var state = _baseState.CreateState(entity.StateMachine);
+
+            return await state.Hide(id);
+        }
+
+        public async Task<List<string>> AllowedActions(int id)
+        {
+            var entity = await _context.Products.FindAsync(id);
+            var state = _baseState.CreateState(entity?.StateMachine);
+            return await state.AllowedActions();
+        }
     }
 }

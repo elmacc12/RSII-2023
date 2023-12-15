@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +10,6 @@ namespace eDentist.Model.Requests
     public class UsersInsertRequest
     {
 
-        public int? UserRole { get; set; }
-
         public string? Name { get; set; }
 
         public string? Surname { get; set; }
@@ -19,8 +18,9 @@ namespace eDentist.Model.Requests
 
         public string? Username { get; set; }
 
+        [Compare("RepeatPassword", ErrorMessage = "Passwords do not match.")]
         public string? Password { get; set; }
-
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string RepeatPassword { get; set; }
 
         public string? Adress { get; set; }
