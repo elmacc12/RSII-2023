@@ -1,78 +1,209 @@
+import 'package:eprodaja_admin/models/appointment.dart';
+import 'package:eprodaja_admin/providers/appointments_provider.dart';
+import 'package:eprodaja_admin/screens/add_appointment_page.dart';
 import 'package:flutter/material.dart';
-import '../widgets/blue_button.dart';
+import 'package:intl/intl.dart';
 
-class TerminiPage extends StatelessWidget {
+class TerminiPage extends StatefulWidget {
+  const TerminiPage({Key? key}) : super(key: key);
+
+  @override
+  State<TerminiPage> createState() => _TerminiPageState();
+}
+
+class _TerminiPageState extends State<TerminiPage> {
+  final AppointmentsProvider _terminiProvider = AppointmentsProvider();
+  List<Appointment> _termin = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTermini();
+  }
+
+  Future<void> _fetchTermini() async {
+    try {
+      var result = await _terminiProvider.get();
+      setState(() {
+        _termin = result.result;
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pregled termina', style: TextStyle(color: Colors.white)),
+        title: Text('Appointments', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue,
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Blue Button
-          Container(
-              margin: EdgeInsets.all(8.0),
-              child:
-                  BlueButton(text: 'Dodaj termin', height: 50.0, width: 100.0)),
-          // Table
+          SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () async {
+              _navigateToTerminDetailScreen(null, null);
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.blue,
+              onPrimary: Colors.white,
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Dodaj novi termin',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
           Expanded(
             child: SingleChildScrollView(
-              child: DataTable(
-                columns: [
-                  DataColumn(label: Text('Vrijeme termina')),
-                  DataColumn(label: Text('Pacijent')),
-                  DataColumn(label: Text('Usluga')),
-                  DataColumn(label: Text('Pregledaj detalje')),
-                  DataColumn(label: Text('Otkaži termin')),
-                ],
-                rows: [
-                  DataRow(
-                    cells: [
-                      DataCell(Text('Data 1')),
-                      DataCell(Text('Data 2')),
-                      DataCell(Text('Data 3')),
-                      // Blue Button
-                      DataCell(
-                        ElevatedButton(
-                          onPressed: () {
-                            // Action 1
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.blue,
-                          ),
-                          child: Text(
-                            'Action 1',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      // Red Button
-                      DataCell(
-                        ElevatedButton(
-                          onPressed: () {
-                            // Action 2
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.red,
-                          ),
-                          child: Text(
-                            'Action 2',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Add more rows as needed
-                ],
-              ),
+              child: Center(child: _buildDataListView()),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildDataListView() {
+    if (isLoading) {
+      return CircularProgressIndicator();
+    }
+
+    if (_termin.isEmpty) {
+      return Text('Nema zakazanih termina');
+    }
+
+    return Container(
+      width: double.infinity,
+      //padding: const EdgeInsets.all(8),
+      child: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columns: [
+              DataColumn(label: Text('Pacijent')),
+              DataColumn(label: Text('Datum')),
+              DataColumn(label: Text('Vrijeme')),
+              DataColumn(label: Text('Otkaži')),
+              DataColumn(label: Text('Uredi')),
+            ],
+            rows: _termin.map((termin) {
+              return DataRow(
+                cells: [
+                  DataCell(Text(termin.userId.toString())),
+                  DataCell(Text(
+                      DateFormat('dd.MM.yyyy - HH:mm').format(termin.datum))),
+                  DataCell(Text(DateFormat('HH:mm').format(termin.datum))),
+                  DataCell(
+                    ElevatedButton(
+                      onPressed: () {
+                        _showDeleteConfirmationDialog(termin);
+                      },
+                      style: ElevatedButton.styleFrom(primary: Colors.red),
+                      child:
+                          Text('Otkaži', style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                  DataCell(
+                    ElevatedButton(
+                      onPressed: () {
+                        _navigateToTerminDetailScreen(termin, termin.userId);
+                      },
+                      style: ElevatedButton.styleFrom(primary: Colors.blue),
+                      child:
+                          Text('Uredi', style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _navigateToTerminDetailScreen(
+      Appointment? termin, int? selectedPatient) async {
+    final modifiedTermin = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AddAppointmentPage(
+            termin: termin, selectedPatient: selectedPatient),
+      ),
+    );
+
+    if (modifiedTermin != null && modifiedTermin is Appointment) {
+      setState(() {
+        int index = _termin.indexWhere(
+            (element) => element.appointmentID == modifiedTermin.appointmentID);
+        if (index != -1) {
+          _termin[index] = modifiedTermin;
+        } else {
+          _termin.add(modifiedTermin);
+        }
+      });
+    }
+  }
+
+  void _showDeleteConfirmationDialog(Appointment termin) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Potvrdi otkazivanje'),
+          content: Text('Da li želite otkazati dati termin'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Zadrži termin'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _deleteTermin(termin);
+                Navigator.of(context).pop();
+              },
+              child: Text('Otkaži'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteTermin(Appointment termin) async {
+    try {
+      await _terminiProvider.delete(termin.appointmentID);
+      setState(() {
+        _termin
+            .removeWhere((item) => item.appointmentID == termin.appointmentID);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Termin "${termin.appointmentID}" je uspješno obrisan'),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text('Greška pri brisanju termina "${termin.appointmentID}".'),
+        ),
+      );
+    }
   }
 }

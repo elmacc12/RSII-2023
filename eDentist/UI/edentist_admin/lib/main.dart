@@ -1,5 +1,11 @@
+import 'package:eprodaja_admin/providers/appointments_provider.dart';
 import 'package:eprodaja_admin/providers/color_prvider.dart';
-import 'package:eprodaja_admin/screens/medical_record_page.dart';
+import 'package:eprodaja_admin/providers/dentalService_provider.dart';
+import 'package:eprodaja_admin/providers/login_provider.dart';
+import 'package:eprodaja_admin/providers/product_provider.dart';
+import 'package:eprodaja_admin/providers/product_type_provider.dart';
+import 'package:eprodaja_admin/providers/user_provider.dart';
+import 'package:eprodaja_admin/screens/dental_service_page.dart';
 
 import './screens/termini_page.dart';
 import 'package:flutter/material.dart';
@@ -44,12 +50,19 @@ class MyMaterialApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => LogInProvider()),
+        ChangeNotifierProvider(create: (_) => DentalServiceProvider()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => AppointmentsProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => ColorProvider()),
+        ChangeNotifierProvider(create: (_) => ProductTypeProvider()),
+        ChangeNotifierProvider(create: (_) => ProductDetailState()),
       ],
       child: MaterialApp(
         title: 'RS II Material app',
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: MedicalRecordsPage(),
+        home: LoginPage(),
       ),
     );
   }

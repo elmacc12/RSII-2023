@@ -10,5 +10,6 @@ namespace eDentist.Services.Interfaces
     {
         Task<T> Insert(Tinsert obj);
         Task<T> Update(Tupdate obj,int id);
+        Task<T> Delete(int id);
     }
 }

@@ -1,3 +1,8 @@
+import 'package:eprodaja_admin/screens/dental_service_page.dart';
+import 'package:eprodaja_admin/screens/medical_card_page.dart';
+import 'package:eprodaja_admin/screens/patients_page.dart';
+import 'package:eprodaja_admin/screens/products_page.dart';
+import 'package:eprodaja_admin/screens/termini_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/blue_button.dart';
 
@@ -22,17 +27,44 @@ class HomePage extends StatelessWidget {
                 BlueButton(
                     text: 'Pregled termina',
                     height: 80.0,
-                    width: double.infinity),
+                    width: double.infinity,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TerminiPage()),
+                      );
+                    }),
                 BlueButton(
                     text: 'Pregled lječničkih kartona',
                     height: 80.0,
-                    width: double.infinity),
+                    width: double.infinity,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PatientsPage()),
+                      );
+                    }),
                 BlueButton(
-                    text: 'Usluge', height: 80.0, width: double.infinity),
+                    text: 'Usluge',
+                    height: 80.0,
+                    width: double.infinity,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DentalServicesPage()),
+                      );
+                    }),
                 BlueButton(
                     text: 'Pregled proizvoda',
                     height: 80.0,
-                    width: double.infinity),
+                    width: double.infinity,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProductsPage()),
+                      );
+                    }),
                 BlueButton(
                     text: 'Dodaj članak', height: 80.0, width: double.infinity),
               ],

@@ -12,6 +12,8 @@ namespace eDentist.Model.Requests
         public string? Name { get; set; }
 
         public string? Surname { get; set; }
+        public int RoleID { get; set; }
+        public byte[]? Slika { get; set; }
 
         public string? Email { get; set; }
 

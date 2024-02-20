@@ -4,11 +4,13 @@ class BlueButton extends StatelessWidget {
   final String text;
   final double height;
   final double width;
+  final VoidCallback? onPressed;
 
   BlueButton({
     required this.text,
     required this.height,
     required this.width,
+    this.onPressed,
   });
 
   @override
@@ -18,9 +20,7 @@ class BlueButton extends StatelessWidget {
       height: height,
       width: width,
       child: ElevatedButton(
-        onPressed: () {
-          // Button action
-        },
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           primary: Colors.blue,
         ),

@@ -6,13 +6,15 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text;
 using eDentist.Services.Interfaces;
+using eDentist.Model;
 
 namespace eDentist
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        IUsersService _korisniciService;
-        public BasicAuthenticationHandler(IUsersService korisniciService, IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+        protected readonly IUsersService _korisniciService;
+        public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IUsersService korisniciService)
+            : base(options, logger, encoder, clock)
         {
             _korisniciService = korisniciService;
         }
@@ -24,38 +26,41 @@ namespace eDentist
                 return AuthenticateResult.Fail("Missing header");
             }
 
-            var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
-            var credentialsBytes = Convert.FromBase64String(authHeader.Parameter);
-            var credentials = Encoding.UTF8.GetString(credentialsBytes).Split(':');
+            UserModel korisnik = null;
+            try
+            {
+                var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
+                var credentialsBytes = Convert.FromBase64String(authHeader.Parameter);
+                var credentials = Encoding.UTF8.GetString(credentialsBytes).Split(':');
 
-            var username = credentials[0];
-            var password = credentials[1];
+                var username = credentials[0];
+                var password = credentials[1];
 
-            var user = await _korisniciService.Login(username, password);
-
-            if (user == null)
+                korisnik = await _korisniciService.Login(username, password);
+            }
+            catch
             {
                 return AuthenticateResult.Fail("Incorrect username or password");
             }
+
+            if (korisnik == null)
+            {
+                return AuthenticateResult.Fail("Incorrect username or password");
+            }
+
             else
             {
+                var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, korisnik.Username),
+                new Claim(ClaimTypes.Name, korisnik.Name),
+            };
 
+                claims.Add(new Claim(ClaimTypes.Role, korisnik.Role.RoleName));
 
-                var claims = new List<Claim>()
-                {
-                    new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(ClaimTypes.NameIdentifier, user.Username)
-                };
-
-                foreach (var role in user.UserRoles)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role.Role.RoleName));
-                }
 
                 var identity = new ClaimsIdentity(claims, Scheme.Name);
-
                 var principal = new ClaimsPrincipal(identity);
-
                 var ticket = new AuthenticationTicket(principal, Scheme.Name);
                 return AuthenticateResult.Success(ticket);
             }

@@ -35,8 +35,8 @@ public partial class EDentistDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Roles> Roles { get; set; }
-    public virtual DbSet<UserRoles> UserRoles { get; set; }
-    public virtual DbSet<Color> Color { get; set; }
+    public virtual DbSet<Appointment> Appointments { get; set; }
+    public virtual DbSet<RecommendResult> RecommendResult { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

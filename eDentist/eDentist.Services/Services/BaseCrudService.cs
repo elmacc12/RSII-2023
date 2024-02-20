@@ -43,5 +43,22 @@ namespace eDentist.Services.Services
             return _mapper.Map<T>(entity);
 
         }
+
+        public virtual async Task<T> Delete(int id)
+        {
+            var table = _context.Set<TDB>();
+            TDB entity = await table.FindAsync(id);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            table.Remove(entity);
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<T>(entity);
+        }
+
     }
 }

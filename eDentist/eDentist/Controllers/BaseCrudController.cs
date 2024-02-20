@@ -30,6 +30,10 @@ namespace eDentist.Controllers
         {
             return await _service.Update(update,id);
         }
-
+        [HttpDelete("{id}")]
+        public virtual async Task<T> Delete(int id)
+        {
+            return await _service.Delete(id);
+        }
     }
 }

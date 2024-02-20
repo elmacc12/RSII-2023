@@ -8,9 +8,8 @@ namespace eDentist.Model.Requests
 {
     public class ProductUpdateRequest
     {
-        public int ProductId { get; set; }
-
         public string? ProductName { get; set; }
+        public string? Barcode { get; set; }
 
         public string? ProductDescription { get; set; }
 
@@ -19,6 +18,7 @@ namespace eDentist.Model.Requests
         public int? QuantityLeft { get; set; }
 
         public int? ProductTypeId { get; set; }
-        public int ColorID { get; set; }
+
+        public byte[]? Slika { get; set; }
     }
 }

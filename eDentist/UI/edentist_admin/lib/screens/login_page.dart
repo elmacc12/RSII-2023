@@ -1,4 +1,6 @@
+import 'package:eprodaja_admin/models/login.dart';
 import 'package:eprodaja_admin/providers/color_prvider.dart';
+import 'package:eprodaja_admin/providers/login_provider.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import '../utils/util.dart';
@@ -9,11 +11,11 @@ class LoginPage extends StatelessWidget {
 
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
-  late ColorProvider _colorProvider;
+  late LogInProvider _logInProvider;
 
   @override
   Widget build(BuildContext context) {
-    _colorProvider = context.read<ColorProvider>();
+    _logInProvider = context.read<LogInProvider>();
 
     return Scaffold(
       body: Container(
@@ -63,10 +65,11 @@ class LoginPage extends StatelessWidget {
                         Authorization.username = username;
                         Authorization.password = password;
 
+                        LogIn object = LogIn(username, password);
                         try {
-                          await _colorProvider.get();
+                          await _logInProvider.post(data: object.toJson());
 
-                          Navigator.of(context).push(
+                          Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) => HomePage(),
                             ),
@@ -76,7 +79,8 @@ class LoginPage extends StatelessWidget {
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
                                     title: Text("Error"),
-                                    content: Text(e.toString()),
+                                    content:
+                                        Text("Invalid username or password"),
                                     actions: [
                                       TextButton(
                                           onPressed: () =>

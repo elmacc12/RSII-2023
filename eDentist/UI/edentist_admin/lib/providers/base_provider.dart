@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:eprodaja_admin/models/login.dart';
+
 import '../utils/util.dart';
 import '../models/search_result.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +47,40 @@ abstract class BaseProvider<T> with ChangeNotifier {
       throw new Exception("Unknown error");
     }
     // print("response: ${response.request} ${response.statusCode}, ${response.body}");
+  }
+
+  Future<T> post({dynamic data}) async {
+    var url = "$_baseUrl$_endpoint";
+
+    var headers = createHeaders();
+
+    var body = jsonEncode(data);
+
+    var response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+
+    if (isValidResponse(response)) {
+      var responseData = jsonDecode(response.body);
+      return fromJson(responseData);
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
+  Future<T> delete(int? id) async {
+    var url = "$_baseUrl$_endpoint/$id";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.delete(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      print("response: ${response.request}");
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw new Exception("Failed to delete product with ID $id");
+    }
   }
 
   Future<T> insert(dynamic request) async {

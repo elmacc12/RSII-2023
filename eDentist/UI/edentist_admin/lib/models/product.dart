@@ -1,22 +1,31 @@
-// import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-// part 'product.g.dart';
+part 'product.g.dart';
 
-// @JsonSerializable()
-// class Product {
-//   int? proizvodID;
-//   String? naziv;
-//   String? sifra;
-//   double? cijena;
-//   String? slika;
-//   bool? dostupno;
-//   int? vrstaId;
+@JsonSerializable()
+class Product {
+  int productId;
+  String? productName;
+  String? barcode;
+  String? productDescription;
+  int productPrice;
+  int quantityLeft;
+  String? slika;
+  int productTypeId;
 
-//   Product(this.proizvodID, this.naziv, this.sifra, this.cijena, this.slika,
-//       this.dostupno, this.vrstaId);
+  Product(
+    this.productId,
+    this.productName,
+    this.barcode,
+    this.productDescription,
+    this.productPrice,
+    this.quantityLeft,
+    this.slika,
+    this.productTypeId,
+  );
 
-//   factory Product.fromJson(Map<String, dynamic> json) =>
-//       _$ProductFromJson(json);
-
-//   Map<String, dynamic> toJson() => _$ProductToJson(this);
-// }
+  factory Product.fromJson(Map<String, dynamic> json) =>
+      _$ProductFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductToJson(this);
+}

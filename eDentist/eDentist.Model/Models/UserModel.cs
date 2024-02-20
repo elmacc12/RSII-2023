@@ -11,7 +11,9 @@ namespace eDentist.Model
     {
         public int UserId { get; set; }
 
-        public int? UserRole { get; set; }
+        public int? RoleID { get; set; }
+
+        public RolesModel? Role { get; set; }
 
         public string? Name { get; set; }
 
@@ -26,6 +28,6 @@ namespace eDentist.Model
         public string? ZipCode { get; set; }
 
         public int? CityId { get; set; }
-        public virtual ICollection<UserRolesModel> UserRoles { get; } = new List<UserRolesModel>();
+        public byte[]? Slika { get; set; }
     }
 }

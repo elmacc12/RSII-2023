@@ -17,6 +17,7 @@ namespace eDentist.Model.Models
         public string? ProductDescription { get; set; }
 
         public int? ProductPrice { get; set; }
+        public byte[]? Slika { get; set; }
 
         public int? QuantityLeft { get; set; }
 

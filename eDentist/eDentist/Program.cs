@@ -24,8 +24,13 @@ builder.Services.AddTransient<InitialProductState>();
 builder.Services.AddTransient<DraftProductState>();
 builder.Services.AddTransient<ActiveProductState>();
 builder.Services.AddTransient<IProductTypeService, ProductTypeService>();
-builder.Services.AddTransient<IColorService, ColorService>();
-
+builder.Services.AddTransient<IDentalService, DentalServiceService>();
+builder.Services.AddTransient<IMedicalCardService, MedicalCardService>();
+builder.Services.AddTransient<IAppointmentsService,AppointmentService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IOrderHeaderService, OrderHeaderService>();
+builder.Services.AddTransient<IFavoriteService, FavoriteService>();
+builder.Services.AddTransient<IRecommendResultService, RecommendResultService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

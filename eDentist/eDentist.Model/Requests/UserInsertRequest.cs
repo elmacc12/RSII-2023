@@ -13,11 +13,13 @@ namespace eDentist.Model.Requests
         public string? Name { get; set; }
 
         public string? Surname { get; set; }
-
+        public int RoleID { get; set; }
         public string? Email { get; set; }
 
         public string? Username { get; set; }
 
+
+        public byte[]? Slika { get; set; }
         [Compare("RepeatPassword", ErrorMessage = "Passwords do not match.")]
         public string? Password { get; set; }
         [Compare("Password", ErrorMessage = "Passwords do not match.")]

@@ -67,7 +67,7 @@ namespace eDentist.Services.Services
 
         public async Task<UserModel> Login(string username, string password)
         {
-            var entity = await _context.Users.Include("UserRoles.Role").FirstOrDefaultAsync(x => x.Username == username);
+            var entity = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(x => x.Username == username);
 
             if (entity == null)
             {

@@ -1,6 +1,7 @@
 ﻿using eDentist.Model.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eDentist.Services.Database;
 
@@ -24,7 +25,11 @@ public partial class User
 
     public int? CityId { get; set; }
 
+    public byte[]? Slika { get; set; }
     public virtual City? City { get; set; }
+    [ForeignKey("RoleID")]
+    public Roles Role { get; set; }
+    public int RoleID { get; set; }
 
     public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 
@@ -32,5 +37,4 @@ public partial class User
 
     public virtual ICollection<OrderHeader> OrderHeaders { get; set; } = new List<OrderHeader>();
 
-    public virtual ICollection<UserRoles> UserRoles { get; } = new List<UserRoles>();
 }

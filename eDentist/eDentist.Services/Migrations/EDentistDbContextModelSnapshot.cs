@@ -22,6 +22,34 @@ namespace eDentist.Services.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("eDentist.Services.Database.Appointment", b =>
+                {
+                    b.Property<int>("AppointmentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentID"));
+
+                    b.Property<DateTime>("Datum")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("TerminZatvoren")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Vrijeme")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AppointmentID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Appointments");
+                });
+
             modelBuilder.Entity("eDentist.Services.Database.City", b =>
                 {
                     b.Property<int>("CityId")
@@ -44,22 +72,6 @@ namespace eDentist.Services.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("City", (string)null);
-                });
-
-            modelBuilder.Entity("eDentist.Services.Database.Color", b =>
-                {
-                    b.Property<int>("ColorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ColorId"));
-
-                    b.Property<string>("ColorName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ColorId");
-
-                    b.ToTable("Color");
                 });
 
             modelBuilder.Entity("eDentist.Services.Database.Country", b =>
@@ -155,6 +167,9 @@ namespace eDentist.Services.Migrations
                         .HasColumnType("int")
                         .HasColumnName("UserID");
 
+                    b.Property<DateTime>("datumDijagnoze")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("MedicalCardId")
                         .HasName("PK__MedicalC__931EC236004DC9A6");
 
@@ -234,8 +249,8 @@ namespace eDentist.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
-                    b.Property<int>("ColorID")
-                        .HasColumnType("int");
+                    b.Property<string>("Barcode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductDescription")
                         .HasColumnType("text");
@@ -255,14 +270,15 @@ namespace eDentist.Services.Migrations
                     b.Property<int?>("QuantityLeft")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("Slika")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("StateMachine")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductId")
                         .HasName("PK__Products__B40CC6ED012064AE");
-
-                    b.HasIndex("ColorID");
 
                     b.HasIndex("ProductTypeId");
 
@@ -287,6 +303,31 @@ namespace eDentist.Services.Migrations
                         .HasName("PK__ProductT__516F0395CFF2B1F5");
 
                     b.ToTable("ProductType", (string)null);
+                });
+
+            modelBuilder.Entity("eDentist.Services.Database.RecommendResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DrugiProizvodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProizvodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PrviProizvodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TreciProizvodId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RecommendResult");
                 });
 
             modelBuilder.Entity("eDentist.Services.Database.Roles", b =>
@@ -336,6 +377,12 @@ namespace eDentist.Services.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Slika")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
@@ -351,33 +398,20 @@ namespace eDentist.Services.Migrations
 
                     b.HasIndex("CityId");
 
+                    b.HasIndex("RoleID");
+
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("eDentist.Services.Database.UserRoles", b =>
+            modelBuilder.Entity("eDentist.Services.Database.Appointment", b =>
                 {
-                    b.Property<int>("UserRoleID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("eDentist.Services.Database.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleID"));
-
-                    b.Property<DateTime>("ChangedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RoleID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserRoleID");
-
-                    b.HasIndex("RoleID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("UserRoles");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("eDentist.Services.Database.City", b =>
@@ -453,18 +487,10 @@ namespace eDentist.Services.Migrations
 
             modelBuilder.Entity("eDentist.Services.Database.Product", b =>
                 {
-                    b.HasOne("eDentist.Services.Database.Color", "Color")
-                        .WithMany()
-                        .HasForeignKey("ColorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("eDentist.Services.Database.ProductType", "ProductType")
                         .WithMany("Products")
                         .HasForeignKey("ProductTypeId")
                         .HasConstraintName("fk_product_type");
-
-                    b.Navigation("Color");
 
                     b.Navigation("ProductType");
                 });
@@ -476,26 +502,15 @@ namespace eDentist.Services.Migrations
                         .HasForeignKey("CityId")
                         .HasConstraintName("pk_user_city");
 
-                    b.Navigation("City");
-                });
-
-            modelBuilder.Entity("eDentist.Services.Database.UserRoles", b =>
-                {
                     b.HasOne("eDentist.Services.Database.Roles", "Role")
                         .WithMany()
                         .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eDentist.Services.Database.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("City");
 
                     b.Navigation("Role");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("eDentist.Services.Database.City", b =>
@@ -537,8 +552,6 @@ namespace eDentist.Services.Migrations
                     b.Navigation("MedicalCards");
 
                     b.Navigation("OrderHeaders");
-
-                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }
