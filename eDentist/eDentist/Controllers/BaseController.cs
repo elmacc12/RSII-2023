@@ -23,5 +23,11 @@ namespace eDentist.Controllers
         {
             return await _service.Get(search);
         }
+
+        [HttpGet("{id}")]
+        public async Task<T> GetById(int id)
+        {
+            return await _service.GetById(id);
+        }
     }
 }

@@ -15,5 +15,6 @@ namespace eDentist.Model.Models
         public int? UserId { get; set; }
 
         public int? TotalPrice { get; set; }
+        public string? Status { get; set; }
     }
 }

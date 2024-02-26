@@ -49,5 +49,12 @@ namespace eDentist.Services.Services
         {
             return query;
         }
+
+        public virtual async Task<T> GetById(int id)
+        {
+            var entity = await _context.Set<TDb>().FindAsync(id);
+
+            return _mapper.Map<T>(entity);
+        }
     }
 }

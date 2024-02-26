@@ -37,7 +37,8 @@ public partial class EDentistDbContext : DbContext
     public virtual DbSet<Roles> Roles { get; set; }
     public virtual DbSet<Appointment> Appointments { get; set; }
     public virtual DbSet<RecommendResult> RecommendResult { get; set; }
-
+    public virtual DbSet<Transactions> Transactions { get; set; }
+    public virtual DbSet<BlogPost> BlogPosts { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<City>(entity =>
@@ -190,7 +191,7 @@ public partial class EDentistDbContext : DbContext
          
            
           
-            entity.Property(e => e.ZipCode).HasColumnName("ZIP_Code");
+            
 
             entity.HasOne(d => d.City).WithMany(p => p.Users)
                 .HasForeignKey(d => d.CityId)

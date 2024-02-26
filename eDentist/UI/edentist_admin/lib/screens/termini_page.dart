@@ -41,7 +41,7 @@ class _TerminiPageState extends State<TerminiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Appointments', style: TextStyle(color: Colors.white)),
+        title: Text('Pregled termina', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue,
       ),
       body: Column(
@@ -52,8 +52,8 @@ class _TerminiPageState extends State<TerminiPage> {
               _navigateToTerminDetailScreen(null, null);
             },
             style: ElevatedButton.styleFrom(
-              primary: Colors.blue,
-              onPrimary: Colors.white,
+              backgroundColor: Colors.blue,
+              //onPrimary: Colors.white,
             ),
             child: SizedBox(
               width: double.infinity,
@@ -112,7 +112,8 @@ class _TerminiPageState extends State<TerminiPage> {
                       onPressed: () {
                         _showDeleteConfirmationDialog(termin);
                       },
-                      style: ElevatedButton.styleFrom(primary: Colors.red),
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
                       child:
                           Text('Otkaži', style: TextStyle(color: Colors.white)),
                     ),
@@ -122,7 +123,8 @@ class _TerminiPageState extends State<TerminiPage> {
                       onPressed: () {
                         _navigateToTerminDetailScreen(termin, termin.userId);
                       },
-                      style: ElevatedButton.styleFrom(primary: Colors.blue),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue),
                       child:
                           Text('Uredi', style: TextStyle(color: Colors.white)),
                     ),

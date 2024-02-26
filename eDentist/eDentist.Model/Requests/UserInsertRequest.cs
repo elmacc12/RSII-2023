@@ -27,7 +27,7 @@ namespace eDentist.Model.Requests
 
         public string? Adress { get; set; }
 
-        public string? ZipCode { get; set; }
+       
 
         public int? CityId { get; set; }
     }

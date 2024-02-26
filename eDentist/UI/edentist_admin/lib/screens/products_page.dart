@@ -20,8 +20,8 @@ class _ProductListScreenState extends State<ProductsPage> {
   late ProductProvider _productProvider;
   SearchResult<Product>? result;
   bool isLoading = true;
-  TextEditingController _ftsController = new TextEditingController();
-  TextEditingController _sifraController = new TextEditingController();
+  TextEditingController _ftsController = TextEditingController();
+  TextEditingController _sifraController = TextEditingController();
   final _formKey = GlobalKey<FormBuilderState>();
 
   String _selectedSortDirection = 'ascending';
@@ -107,13 +107,16 @@ class _ProductListScreenState extends State<ProductsPage> {
             SizedBox(width: 8),
             ElevatedButton(
               onPressed: () async {
-                Navigator.of(context).push(
+                await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ProductDetailScreen(
                       product: null,
                     ),
                   ),
                 );
+
+                // Refresh products after adding a new product
+                _fetchProducts();
               },
               child: Text("Add"),
             ),
@@ -248,7 +251,7 @@ class _ProductListScreenState extends State<ProductsPage> {
       await _productProvider.delete(product.productId);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Product  deleted successfully.'),
+          content: Text('Product deleted successfully.'),
           duration: Duration(seconds: 2),
         ),
       );

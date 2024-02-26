@@ -1,5 +1,7 @@
+import 'package:eprodaja_admin/screens/blog_screen.dart';
 import 'package:eprodaja_admin/screens/dental_service_page.dart';
 import 'package:eprodaja_admin/screens/medical_card_page.dart';
+import 'package:eprodaja_admin/screens/orders_list_screen.dart';
 import 'package:eprodaja_admin/screens/patients_page.dart';
 import 'package:eprodaja_admin/screens/products_page.dart';
 import 'package:eprodaja_admin/screens/termini_page.dart';
@@ -23,7 +25,14 @@ class HomePage extends StatelessWidget {
                 BlueButton(
                     text: 'Pregled narudžbi',
                     height: 80.0,
-                    width: double.infinity),
+                    width: double.infinity,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => OrdersListScreen()),
+                      );
+                    }),
                 BlueButton(
                     text: 'Pregled termina',
                     height: 80.0,
@@ -66,7 +75,15 @@ class HomePage extends StatelessWidget {
                       );
                     }),
                 BlueButton(
-                    text: 'Dodaj članak', height: 80.0, width: double.infinity),
+                    text: 'Pregled članaka',
+                    height: 80.0,
+                    width: double.infinity,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => BlogListPage()),
+                      );
+                    }),
               ],
             ),
           ),

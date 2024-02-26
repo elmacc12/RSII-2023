@@ -12,6 +12,7 @@ namespace eDentist.Model.Models
         public int CityId { get; set; }
 
         public string? CityName { get; set; }
+        public string? ZipCode { get; set; }
 
         public int? CountryId { get; set; }
     }

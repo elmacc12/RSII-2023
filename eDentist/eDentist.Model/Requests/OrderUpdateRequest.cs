@@ -14,6 +14,5 @@ namespace eDentist.Model.Requests
 
         public int? Quantity { get; set; }
 
-        public int? ProductTotal { get; set; }
     }
 }

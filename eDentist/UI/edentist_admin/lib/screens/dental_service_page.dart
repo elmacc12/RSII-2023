@@ -79,14 +79,15 @@ class _DentalServicesPageState extends State<DentalServicesPage> {
                   ),
                 ),
                 SizedBox(width: 8),
-                BlueButton(
-                  text: 'Dodaj uslugu',
-                  width: 120,
-                  height: 40,
-                  onPressed: () {
-                    _showAddServiceDialog();
-                  },
-                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    onPressed: () {
+                      _showAddServiceDialog();
+                    },
+                    child: Text("Dodaj uslugu",
+                        style: TextStyle(color: Colors.white))),
               ],
             ),
           ),
@@ -106,15 +107,16 @@ class _DentalServicesPageState extends State<DentalServicesPage> {
                       DataCell(Text(service.serviceDescription ?? "")),
                       DataCell(Text(service.servicePrice.toString() + "KM")),
                       DataCell(
-                        BlueButton(
-                          text: "Uredi",
-                          width: 80,
-                          height: 40,
-                          onPressed: () {
-                            _showAddServiceDialog(
-                                editing: true, service: service);
-                          },
-                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                            ),
+                            onPressed: () {
+                              _showAddServiceDialog(
+                                  editing: true, service: service);
+                            },
+                            child: Text("Uredi",
+                                style: TextStyle(color: Colors.white))),
                       ),
                     ],
                   );

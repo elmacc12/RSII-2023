@@ -1,8 +1,10 @@
 import 'package:edentist_mobile/providers/appointment_provider.dart';
+import 'package:edentist_mobile/providers/blogpost_provider.dart';
 import 'package:edentist_mobile/providers/cart_provider.dart';
 import 'package:edentist_mobile/providers/favorites_provider.dart';
 import 'package:edentist_mobile/providers/login_provider.dart';
-import 'package:edentist_mobile/providers/oreder_providet.dart';
+import 'package:edentist_mobile/providers/order_details_provider.dart';
+import 'package:edentist_mobile/providers/order_providet.dart';
 import 'package:edentist_mobile/providers/product_provider.dart';
 import 'package:edentist_mobile/providers/recommendResult_provider.dart';
 import 'package:edentist_mobile/providers/user_provider.dart';
@@ -34,7 +36,6 @@ class MyMaterialApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider()),
-        // ChangeNotifierProvider(create: (_) => NovostiProvider()),
         ChangeNotifierProvider(create: (_) => AppointmentsProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
@@ -47,6 +48,9 @@ class MyMaterialApp extends StatelessWidget {
         // ChangeNotifierProvider(create: (_) => ZdravstveniKartonProvider()),
         // ChangeNotifierProvider(create: (_) => TransakcijaProvider()),
         ChangeNotifierProvider(create: (_) => RecommendResultProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => OrderDetailsProvider()),
+        ChangeNotifierProvider(create: (_) => BlogPostProvider()),
       ],
       child: MaterialApp(
         title: 'RS II Material app',

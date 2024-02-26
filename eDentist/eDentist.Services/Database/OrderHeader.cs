@@ -12,6 +12,7 @@ public partial class OrderHeader
     public int? UserId { get; set; }
 
     public int? TotalPrice { get; set; }
+    public string? Status { get; set; }
 
     public virtual ICollection<Order> OrderOrderHeaders { get; set; } = new List<Order>();
 

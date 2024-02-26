@@ -25,7 +25,7 @@ namespace eDentist.Model
 
         public string? Adress { get; set; }
 
-        public string? ZipCode { get; set; }
+       
 
         public int? CityId { get; set; }
         public byte[]? Slika { get; set; }

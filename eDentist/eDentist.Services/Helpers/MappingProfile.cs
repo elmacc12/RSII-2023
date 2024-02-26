@@ -53,6 +53,10 @@ namespace eDentist.Services.Helpers
             CreateMap<FavoriteUpdateRequest, Favorite>();
             CreateMap<Database.RecommendResult, RecommendResultModel>();
             CreateMap<Model.Requests.RecommendResultUpsertRequest, Database.RecommendResult>();
+            CreateMap<Transactions, TransactionModel>();
+            CreateMap<TransactionUpsertRequest,Transactions>();
+            CreateMap<BlogPost, BlogPostModel>();
+            CreateMap<BlogPostUpsertRequest, BlogPost>();
         }
     }
 }

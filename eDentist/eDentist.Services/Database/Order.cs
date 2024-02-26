@@ -13,8 +13,6 @@ public partial class Order
 
     public int? Quantity { get; set; }
 
-    public int? ProductTotal { get; set; }
-
     public virtual OrderHeader? OrderHeader { get; set; }
 
     public virtual OrderHeader? Product { get; set; }

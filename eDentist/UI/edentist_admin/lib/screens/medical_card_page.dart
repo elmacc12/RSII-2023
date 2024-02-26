@@ -7,6 +7,10 @@ import 'package:eprodaja_admin/utils/util.dart';
 import 'package:eprodaja_admin/widgets/blue_button.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class MedicalCardPage extends StatefulWidget {
   final User user;
@@ -137,6 +141,16 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
                           _showAddDiagnoseDialog();
                         },
                       ),
+                      SizedBox(height: 20),
+                      BlueButton(
+                        text: 'Kreiraj izvještaj',
+                        width: 200,
+                        height: 40,
+                        onPressed: () async {
+                          final pdf = await _generatePDFReport();
+                          await _printPDFReport(pdf);
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -146,6 +160,79 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
         ),
       ),
     );
+  }
+
+  Future<pw.Document> _generatePDFReport() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Container(
+              decoration: pw.BoxDecoration(
+                border: pw.Border.all(color: PdfColors.black, width: 2),
+              ),
+              padding: pw.EdgeInsets.all(20),
+              child: pw.Column(
+                children: [
+                  pw.Text('PDF Report Content',
+                      style: pw.TextStyle(fontSize: 20)),
+                  pw.SizedBox(height: 20),
+                  _generatePDFContent(),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    return pdf;
+  }
+
+  Future<void> _printPDFReport(pw.Document pdf) async {
+    await Printing.layoutPdf(
+      onLayout: (format) async => pdf.save(),
+    );
+  }
+
+  pw.Widget _generatePDFContent() {
+    if (widget.user.name != null && widget.user.surname != null) {
+      return pw.Column(
+        children: medicalCards!.map((dijagnoza) {
+          return pw.Container(
+            padding: pw.EdgeInsets.symmetric(vertical: 8.0),
+            child: pw.Column(
+              children: [
+                pw.Row(
+                  children: [
+                    pw.Text('Ime pacijenta: ${widget.user.name}'),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.Text('Prezime pacijenta:  ${widget.user.surname}'),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.Text('Datum: ${dijagnoza.datumDijagnoze}'),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.Text('Misljenje doktora:  ${dijagnoza.doctorsOppinion}'),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      );
+    } else {
+      return pw.Text('Nema podataka o dijagnozama pacijenta.');
+    }
   }
 
   Future<void> _showAddDiagnoseDialog(

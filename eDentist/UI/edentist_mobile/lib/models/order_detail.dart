@@ -6,8 +6,9 @@ part 'order_detail.g.dart';
 class Order {
   int? productId;
   int? quantity;
+  int? orderHeaderId;
 
-  Order(this.productId, this.quantity);
+  Order(this.orderHeaderId, this.productId, this.quantity);
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 

@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:edentist_mobile/screens/blog_list_screen.dart';
+import 'package:edentist_mobile/screens/cart_screen.dart';
 import 'package:edentist_mobile/screens/favorites_screen.dart';
 import 'package:edentist_mobile/screens/termini_page.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +44,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               color: Colors.black,
             ),
             onPressed: () {
-              // Navigate to the Cart page
-              // Add your navigation logic here
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CartScreen(),
+                ),
+              );
             },
           ),
         ],
@@ -77,9 +82,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ListTile(
               title: Text('Blog'),
               onTap: () {
-                // Navigate to the "Blog" page
-                Navigator.pop(context);
-                // Add your navigation logic here
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BlogListPage(),
+                  ),
+                );
               },
             ),
             ListTile(

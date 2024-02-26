@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:edentist_mobile/models/cart.dart';
+import 'package:edentist_mobile/models/order_detail.dart';
 import 'package:edentist_mobile/providers/cart_provider.dart';
-import 'package:edentist_mobile/providers/oreder_providet.dart';
+import 'package:edentist_mobile/providers/order_details_provider.dart';
+import 'package:edentist_mobile/providers/order_providet.dart';
 import 'package:edentist_mobile/providers/user_provider.dart';
+import 'package:edentist_mobile/screens/paypal_screen.dart';
 import 'package:edentist_mobile/utils/util.dart';
 import 'package:edentist_mobile/widgets/master_screen_widget.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +24,7 @@ class _CartScreenState extends State<CartScreen> {
   late CartProvider _cartProvider;
   late OrderProvider _orderProvider;
   late UserProvider _korisniciProvider;
+  late OrderDetailsProvider _orderDetailsProvider;
 
   @override
   void initState() {
@@ -33,6 +37,7 @@ class _CartScreenState extends State<CartScreen> {
     _cartProvider = context.watch<CartProvider>();
     _orderProvider = context.watch<OrderProvider>();
     _korisniciProvider = context.watch<UserProvider>();
+    _orderDetailsProvider = context.watch<OrderDetailsProvider>();
   }
 
   @override
@@ -173,23 +178,32 @@ class _CartScreenState extends State<CartScreen> {
               int patientId = await getPatientId();
 
               Map<String, dynamic> order = {
-                "items": items,
-                "korisnikId": await getPatientId(),
+                "orderDate": DateTime.now().toIso8601String(),
+                "userId": await getPatientId(),
+                "totalPrice": total.toInt(),
               };
 
               var response = await _orderProvider.insert(order);
 
+              for (var item in _cartProvider.cart.items) {
+                Map<String, dynamic> orderProduct = {
+                  "orderHeaderId": response.orderHeaderId,
+                  "productId": item.product.productId,
+                  "quantity": item.count
+                };
+                var result = await _orderDetailsProvider.insert(orderProduct);
+              }
+
               setState(() {});
 
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => PaymentScreen(
-              //         items: items,
-              //         korisnikId: patientId,
-              //         narudzbaId: response?.orderHeaderId,
-              //         iznos: response?.totalPrice),
-              //   ),
-              // );
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PaypalScreen(
+                  items: items,
+                  korisnikId: patientId,
+                  narudzbaId: response?.orderHeaderId,
+                  // iznos: response?.totalPrice),
+                ),
+              ));
             },
       child: const Text("Buy"),
     );

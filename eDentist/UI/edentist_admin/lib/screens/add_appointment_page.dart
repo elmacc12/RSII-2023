@@ -184,7 +184,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
               },
               child:
                   Text('Odaberi datum', style: TextStyle(color: Colors.white)),
-              style: ElevatedButton.styleFrom(primary: Colors.blue),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
             ),
             SizedBox(height: 20),
             Text(
@@ -236,7 +236,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                         }
                       : null,
                   child: Text('Spremi', style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(primary: Colors.blue),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 ),
               ],
             ),

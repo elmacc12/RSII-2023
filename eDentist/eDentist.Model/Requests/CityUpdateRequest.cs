@@ -9,5 +9,6 @@ namespace eDentist.Model.Requests
     public class CityUpdateRequest
     {
         public string CityName { get; set; }
+        public string? ZipCode { get; set; }
     }
 }

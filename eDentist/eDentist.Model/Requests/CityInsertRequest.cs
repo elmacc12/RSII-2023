@@ -10,5 +10,6 @@ namespace eDentist.Model.Requests
     {
         public string? CityName { get; set; }
         public int? CountryId { get; set; }
+        public string? ZipCode { get; set; }
     }
 }

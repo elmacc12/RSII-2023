@@ -31,7 +31,7 @@ class CartItem {
 
   Map<String, dynamic> toJson() {
     return {
-      'product': product.toJson(), // Assuming Product has a toJson method
+      'product': product.toJson(),
       'count': count,
     };
   }

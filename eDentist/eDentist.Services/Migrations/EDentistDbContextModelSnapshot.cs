@@ -50,6 +50,33 @@ namespace eDentist.Services.Migrations
                     b.ToTable("Appointments");
                 });
 
+            modelBuilder.Entity("eDentist.Services.Database.BlogPost", b =>
+                {
+                    b.Property<int>("BlogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogId"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Headline")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Slika")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("BlogId");
+
+                    b.ToTable("BlogPosts");
+                });
+
             modelBuilder.Entity("eDentist.Services.Database.City", b =>
                 {
                     b.Property<int>("CityId")
@@ -65,6 +92,9 @@ namespace eDentist.Services.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int")
                         .HasColumnName("CountryID");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CityId")
                         .HasName("PK__City__F2D21A960A01C0F5");
@@ -197,9 +227,6 @@ namespace eDentist.Services.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ProductID");
 
-                    b.Property<int?>("ProductTotal")
-                        .HasColumnType("int");
-
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
@@ -224,6 +251,9 @@ namespace eDentist.Services.Migrations
 
                     b.Property<DateTime?>("OrderDate")
                         .HasColumnType("date");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TotalPrice")
                         .HasColumnType("int");
@@ -347,6 +377,33 @@ namespace eDentist.Services.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("eDentist.Services.Database.Transactions", b =>
+                {
+                    b.Property<int>("TranskcijaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TranskcijaId"));
+
+                    b.Property<double?>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("OrderHeaderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TranskcijaId");
+
+                    b.HasIndex("OrderHeaderId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("eDentist.Services.Database.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -388,10 +445,6 @@ namespace eDentist.Services.Migrations
 
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ZIP_Code");
 
                     b.HasKey("UserId")
                         .HasName("PK__Users__1788CCAC6A8E000D");
@@ -493,6 +546,15 @@ namespace eDentist.Services.Migrations
                         .HasConstraintName("fk_product_type");
 
                     b.Navigation("ProductType");
+                });
+
+            modelBuilder.Entity("eDentist.Services.Database.Transactions", b =>
+                {
+                    b.HasOne("eDentist.Services.Database.OrderHeader", "OrderHeader")
+                        .WithMany()
+                        .HasForeignKey("OrderHeaderId");
+
+                    b.Navigation("OrderHeader");
                 });
 
             modelBuilder.Entity("eDentist.Services.Database.User", b =>
