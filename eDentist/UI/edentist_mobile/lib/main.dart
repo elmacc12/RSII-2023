@@ -7,6 +7,7 @@ import 'package:edentist_mobile/providers/order_details_provider.dart';
 import 'package:edentist_mobile/providers/order_providet.dart';
 import 'package:edentist_mobile/providers/product_provider.dart';
 import 'package:edentist_mobile/providers/recommendResult_provider.dart';
+import 'package:edentist_mobile/providers/transakcija_provider.dart';
 import 'package:edentist_mobile/providers/user_provider.dart';
 import 'package:edentist_mobile/screens/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -43,14 +44,11 @@ class MyMaterialApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => ProductDetailState()),
         ChangeNotifierProvider(create: (_) => LogInProvider()),
-        // ChangeNotifierProvider(create: (_) => DojamProvider()),
-        // ChangeNotifierProvider(create: (_) => RecenzijaProvider()),
-        // ChangeNotifierProvider(create: (_) => ZdravstveniKartonProvider()),
-        // ChangeNotifierProvider(create: (_) => TransakcijaProvider()),
         ChangeNotifierProvider(create: (_) => RecommendResultProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => OrderDetailsProvider()),
         ChangeNotifierProvider(create: (_) => BlogPostProvider()),
+        ChangeNotifierProvider(create: (_) => TransakcijaProvider()),
       ],
       child: MaterialApp(
         title: 'RS II Material app',

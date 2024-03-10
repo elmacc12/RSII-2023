@@ -1,9 +1,15 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:edentist_mobile/models/user.dart';
+import 'package:edentist_mobile/providers/user_provider.dart';
 import 'package:edentist_mobile/screens/blog_list_screen.dart';
 import 'package:edentist_mobile/screens/cart_screen.dart';
 import 'package:edentist_mobile/screens/favorites_screen.dart';
+import 'package:edentist_mobile/screens/login_screen.dart';
+import 'package:edentist_mobile/screens/medicalCard_page.dart';
 import 'package:edentist_mobile/screens/termini_page.dart';
+import 'package:edentist_mobile/utils/util.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   Widget? child;
@@ -18,6 +24,23 @@ class MasterScreenWidget extends StatefulWidget {
 }
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
+  late UserProvider _korisniciProvider;
+  late User pacijent;
+
+  @override
+  void initState() {
+    super.initState();
+    _korisniciProvider = context.read<UserProvider>();
+    this.getPatient();
+  }
+
+  void getPatient() async {
+    final pacijenti = await _korisniciProvider.get();
+
+    pacijent = pacijenti.result
+        .firstWhere((korisnik) => korisnik.username == Authorization.username);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,11 +113,27 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               },
             ),
             ListTile(
+              title: Text('Moj karton'),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MedicalCardPage(user: pacijent),
+                  ),
+                );
+              },
+            ),
+            ListTile(
               title: Text('Odjavi se'),
               onTap: () {
-                // Log out
-                Navigator.pop(context);
-                // Add your navigation logic here
+                final korisniciProvider =
+                    Provider.of<UserProvider>(context, listen: false);
+                korisniciProvider.logout();
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  (route) => false,
+                );
               },
             ),
           ],

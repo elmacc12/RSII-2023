@@ -31,7 +31,7 @@ namespace eDentist.Services.Services
 
         public List<ProductModel> Recommend(int? id)
         {
-            lock (isLocked)// we lock it until it is finished
+            lock (isLocked)
             {
                 if (mlContext == null)
                 {

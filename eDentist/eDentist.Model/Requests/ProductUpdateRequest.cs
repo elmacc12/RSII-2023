@@ -15,8 +15,6 @@ namespace eDentist.Model.Requests
 
         public int? ProductPrice { get; set; }
 
-        public int? QuantityLeft { get; set; }
-
         public int? ProductTypeId { get; set; }
 
         public byte[]? Slika { get; set; }

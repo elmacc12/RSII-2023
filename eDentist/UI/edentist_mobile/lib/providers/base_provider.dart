@@ -17,7 +17,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   BaseProvider(String endpoint) {
     _endpoint = endpoint;
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://localhost:7015/");
+        defaultValue: "http://10.0.2.2:5192/");
 
     client.badCertificateCallback = (cert, host, port) => true;
     http = IOClient(client);
@@ -89,11 +89,14 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   Future<T> insert(dynamic request) async {
     var url = "$_baseUrl$_endpoint";
+    print("URIIIII ::::::::::::: ${url}");
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
     var jsonRequest = jsonEncode(request);
+    print("jsonReq::::::::::::::: ${jsonRequest}");
     var response = await http!.post(uri, headers: headers, body: jsonRequest);
+    print("responseee::::::::::::::: ${response}");
 
     if (isValidResponse(response)) {
       print("response: ${response.request}");
@@ -143,10 +146,16 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   bool isValidResponse(Response response) {
+    print("Response Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
       throw Exception("Unauthorized");
+    } else if (response.statusCode == 400) {
+      throw Exception("Bad Request");
+    } else if (response.statusCode == 500) {
+      throw Exception("Internal Server Error");
     } else {
       print(response.body);
       throw Exception("Something bad happened please try again");

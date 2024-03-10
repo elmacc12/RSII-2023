@@ -86,6 +86,7 @@ class _TerminiPageState extends State<TerminiPage> {
                 child: Text(
                   'Dodaj novi termin',
                   textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
@@ -117,7 +118,6 @@ class _TerminiPageState extends State<TerminiPage> {
           scrollDirection: Axis.horizontal,
           child: DataTable(
             columns: [
-              DataColumn(label: Text('Pacijent')),
               DataColumn(label: Text('Datum')),
               DataColumn(label: Text('Vrijeme')),
               DataColumn(label: Text('Otkaži')),
@@ -126,7 +126,6 @@ class _TerminiPageState extends State<TerminiPage> {
             rows: _termin.map((termin) {
               return DataRow(
                 cells: [
-                  DataCell(Text(termin.userId.toString())),
                   DataCell(Text(
                       DateFormat('dd.MM.yyyy - HH:mm').format(termin.datum))),
                   DataCell(Text(DateFormat('HH:mm').format(termin.datum))),

@@ -28,9 +28,7 @@ class BlogDetailsScreen extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             // Display Image
-            blog.image != null
-                ? imageFromBase64String(blog.image ?? "")
-                : Container(),
+            _buildBlogImage(),
             SizedBox(height: 16.0),
             // Display Content
             Text(
@@ -41,5 +39,27 @@ class BlogDetailsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildBlogImage() {
+    if (blog.slika == null || blog.slika == "0x" || blog.slika == "") {
+      return Container(
+        height: 120,
+        width: 120,
+        color: Colors.grey,
+        margin: EdgeInsets.all(16),
+        child: Text("No image",
+            style: TextStyle(
+                color: Colors.white, // Set text color to white
+                fontWeight: FontWeight.bold)),
+      );
+    } else {
+      return Container(
+        height: 200,
+        width: double.infinity,
+        margin: EdgeInsets.all(16),
+        child: imageFromBase64String(blog.slika!),
+      );
+    }
   }
 }

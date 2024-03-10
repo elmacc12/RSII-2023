@@ -13,13 +13,12 @@ namespace eDentist.Model.Models
         public int ProductId { get; set; }
 
         public string? ProductName { get; set; }
+        public string? Barcode { get; set; }
 
         public string? ProductDescription { get; set; }
 
         public int? ProductPrice { get; set; }
         public byte[]? Slika { get; set; }
-
-        public int? QuantityLeft { get; set; }
 
         public int? ProductTypeId { get; set; }
        

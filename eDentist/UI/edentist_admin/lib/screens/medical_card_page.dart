@@ -79,11 +79,12 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Pregled kartona za pacijenta ' +
-                widget.user.name.toString() +
-                ' ' +
-                widget.user.surname.toString(),
-            style: TextStyle(color: Colors.white)),
+          'Pregled kartona za pacijenta ' +
+              widget.user.name.toString() +
+              ' ' +
+              widget.user.surname.toString(),
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
       ),
       body: Padding(
@@ -99,7 +100,15 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildUserImage(),
+                      (widget.user.slika == "" ||
+                              widget.user.slika == "0x" ||
+                              widget.user.slika == null)
+                          ? Icon(Icons.image, size: 250)
+                          : Container(
+                              width: 250,
+                              height: 250,
+                              child: imageFromBase64String(widget.user.slika!),
+                            ),
                       Text('Ime: ${widget.user.name}'),
                       Text('Prezime: ${widget.user.surname}'),
                     ],
@@ -176,7 +185,8 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
               padding: pw.EdgeInsets.all(20),
               child: pw.Column(
                 children: [
-                  pw.Text('PDF Report Content',
+                  pw.Text(
+                      'Lijecnicki karton za: ${widget.user.name} ${widget.user.surname}',
                       style: pw.TextStyle(fontSize: 20)),
                   pw.SizedBox(height: 20),
                   _generatePDFContent(),
@@ -205,16 +215,6 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
             padding: pw.EdgeInsets.symmetric(vertical: 8.0),
             child: pw.Column(
               children: [
-                pw.Row(
-                  children: [
-                    pw.Text('Ime pacijenta: ${widget.user.name}'),
-                  ],
-                ),
-                pw.Row(
-                  children: [
-                    pw.Text('Prezime pacijenta:  ${widget.user.surname}'),
-                  ],
-                ),
                 pw.Row(
                   children: [
                     pw.Text('Datum: ${dijagnoza.datumDijagnoze}'),
@@ -254,79 +254,69 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
   }
 
   Widget _buildAddRecordForm({MedicalCard? record}) {
-    TextEditingController doctorsOppinionController =
-        TextEditingController(text: record?.doctorsOppinion ?? "");
+    final _serviceDropdownKey = GlobalKey<FormState>();
+    final _oppinionController = TextEditingController();
 
     return Form(
-      key: _formKey,
+      key: _serviceDropdownKey,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          DropdownButton<int>(
-            value: _selectedService,
-            onChanged: isEditing
-                ? null
-                : (newValue) {
-                    setState(() {
-                      _selectedService = newValue;
-                    });
-                  },
-            items: dentalServices.map<DropdownMenuItem<int>>((DentalService s) {
-                  return DropdownMenuItem<int>(
-                    value: s.dentalServiceId,
-                    child: Text(s.serviceName!),
-                  );
-                }).toList() ??
-                [],
-            isExpanded: true,
-            disabledHint: Text(
-              _selectedService != null
-                  ? 'Selected Dental Service ID: $_selectedService'
-                  : 'Select a Dental Service',
+          DropdownButtonFormField<int>(
+            value: record?.dentalServiceId,
+            items: dentalServices
+                .map((service) => DropdownMenuItem<int>(
+                      value: service.dentalServiceId,
+                      child: Text(service.serviceName ?? ""),
+                    ))
+                .toList(),
+            onChanged: (int? value) {
+              setState(() {
+                _selectedService = value;
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Dental Service',
             ),
           ),
           TextFormField(
-            controller: doctorsOppinionController,
-            decoration: InputDecoration(labelText: 'Mišljenje doktora'),
+            controller: _oppinionController,
+            decoration: InputDecoration(labelText: 'Doctor\'s Opinion'),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Unesite mišljenje doktora';
+                return 'Please enter doctor\'s opinion';
               }
               return null;
             },
           ),
+          SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
-              if (_formKey.currentState?.validate() ?? false) {
-                var request = {
-                  'userId': widget.user.userId,
-                  'dentalServiceId': _selectedService,
-                  'doctorsOppinion': doctorsOppinionController.text,
-                  'datumDijagnoze': DateTime.now(),
-                };
+              if (_serviceDropdownKey.currentState!.validate()) {
+                int userId = widget.user.userId;
+                String doctorsOppinion = _oppinionController.text;
+                DateTime datumDijagnoze = DateTime.now();
 
-                try {
-                  if (isEditing) {
-                    await _medicalCardProvider.update(
-                        medicalCards[editingIndex].medicalCardId!, request);
-                  } else {
-                    await _medicalCardProvider.insert(request);
-                  }
+                MedicalCard newRecord = MedicalCard(0, userId,
+                    _selectedService!, doctorsOppinion, datumDijagnoze);
 
-                  await fetchMedicalRecords();
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                          'Dijagnoza ${isEditing ? 'uređena' : 'dodana'} uspješno.'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                } catch (e) {
-                  print(e);
+                if (isEditing) {
+                  medicalCards[editingIndex] = newRecord;
+                } else {
+                  await _medicalCardProvider.insert(newRecord);
                 }
+
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MedicalCardPage(user: widget.user),
+                  ),
+                );
               }
             },
-            child: Text(isEditing ? 'Uredi' : 'Dodaj'),
+            child: Text('Save Record'),
           ),
         ],
       ),

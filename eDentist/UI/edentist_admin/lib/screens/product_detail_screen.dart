@@ -7,6 +7,7 @@ import 'package:eprodaja_admin/models/product_type.dart';
 import 'package:eprodaja_admin/models/search_result.dart';
 import 'package:eprodaja_admin/providers/product_provider.dart';
 import 'package:eprodaja_admin/providers/product_type_provider.dart';
+import 'package:eprodaja_admin/screens/products_page.dart';
 import 'package:eprodaja_admin/widgets/master_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     super.initState();
     _initialValue = {
-      'barcode': widget.product?.barcode ?? "elma",
+      'barcode': widget.product?.barcode,
       'productName': widget.product?.productName,
       'productPrice': widget.product?.productPrice.toString(),
       'productDescription': widget.product?.productDescription.toString(),
@@ -87,6 +88,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     final isTypeValid = _formKey
                         .currentState!.fields['productTypeId']
                         ?.validate();
+                    final isDescriptionValid = _formKey
+                        .currentState!.fields['productDescription']
+                        ?.validate();
 
                     if (isNameValid == null ||
                         !isNameValid ||
@@ -95,7 +99,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         isPriceValid == null ||
                         !isPriceValid ||
                         isTypeValid == null ||
-                        !isTypeValid) {
+                        !isTypeValid ||
+                        isDescriptionValid == null ||
+                        !isDescriptionValid) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -116,31 +122,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                     var request = new Map.from(_formKey.currentState!.value);
                     request['slika'] = _base64Image;
-                    request['quantityLeft'] = 10;
 
                     try {
                       if (widget.product == null) {
                         await _productProvider.insert(request);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(
-                                'Product successfully added.  Please refresh Product page !'),
+                            content: Text('Proizvod je uspjesno dodan.'),
                             backgroundColor: Colors.green,
                           ),
                         );
                         _formKey.currentState?.reset();
+                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => ProductsPage(),
+                          ),
+                        );
                       } else {
                         print(request);
                         await _productProvider.update(
                             widget.product!.productId!, request);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(
-                                'Product successfully updated. Please refresh Product page !'),
+                            content: Text('Proizvod je uspjesno uređen.'),
                             backgroundColor: Colors.green,
                           ),
                         );
                         Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => ProductsPage(),
+                          ),
+                        );
                       }
                     } on Exception catch (e) {
                       showDialog(
@@ -252,11 +268,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     if (value == null || value.isEmpty) {
                       return "Price is required";
                     }
-                    final cijena = double.tryParse(value);
-                    if (cijena == null) {
-                      return "Price must be a number";
+                    final price = int.tryParse(value);
+                    if (price == null) {
+                      return "Price must be a whole number";
                     }
-                    if (cijena < 1 || cijena > 10000) {
+                    if (price < 1 || price > 10000) {
                       return "Price must be between 1 and 10,000";
                     }
                     return null;

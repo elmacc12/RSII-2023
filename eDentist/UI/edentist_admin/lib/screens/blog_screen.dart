@@ -38,10 +38,12 @@ class _BlogListPageState extends State<BlogListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Blog List'),
+        title: Text('Pregled blogova', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue,
       ),
       body: Column(
         children: [
+          SizedBox(height: 16),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -54,9 +56,16 @@ class _BlogListPageState extends State<BlogListPage> {
               ));
               _fetchBlogs();
             },
-            child: Text(
-              "Add",
-              style: TextStyle(color: Colors.white),
+            child: SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Dodaj novi blog post',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
           Expanded(
@@ -102,8 +111,61 @@ class _BlogListPageState extends State<BlogListPage> {
             },
             // Add more widgets to display other blog details as needed
           ),
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              _showDeleteConfirmationDialog(blog);
+            },
+          ),
         ],
       ),
     );
+  }
+
+  void _showDeleteConfirmationDialog(BlogPost e) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Potvrdi brisanje'),
+          content: Text('Jeste li sigruni da zelite obrisati odabrani blog?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Otkazi'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _deleteBlog(e);
+                Navigator.of(context).pop();
+              },
+              child: Text('Obrisi'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteBlog(BlogPost s) async {
+    try {
+      await _blogProvider.delete(s.blogId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Blog uspjesno obrisan.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      _fetchBlogs();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Greska pri brisanju!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }

@@ -56,5 +56,17 @@ namespace eDentist.Services.Services
             var state = _baseState.CreateState(entity?.StateMachine);
             return await state.AllowedActions();
         }
+
+        public override IQueryable<Database.Product> AddFilter(IQueryable<Database.Product> query, ProductSearchObject? search = null)
+        {
+            var filteredQuery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.FTS))
+            {
+                filteredQuery = filteredQuery.Where(x => x.ProductName.Contains(search.FTS));
+            }
+
+            return filteredQuery;
+        }
     }
 }

@@ -1,8 +1,12 @@
 import 'package:eprodaja_admin/models/order_header.dart';
+import 'package:eprodaja_admin/models/transakcije.dart';
 import 'package:eprodaja_admin/providers/orders_provider.dart';
+import 'package:eprodaja_admin/providers/transakcije_provider.dart';
+import 'package:eprodaja_admin/screens/completed_orders.dart';
 import 'package:eprodaja_admin/screens/order_details.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class OrdersListScreen extends StatefulWidget {
   const OrdersListScreen({Key? key}) : super(key: key);
@@ -15,19 +19,38 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
   final OrderProvider _ordersProvider = OrderProvider();
   List<OrderHeader> _narudzba = [];
   bool isLoading = true;
+  late TransactionsProvider _transactionsProvider = TransactionsProvider();
+  List<Transactions> transactions = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchNarudzbe();
+    _fetchOrders();
+  }
+
+  Future<void> _fetchOrders() async {
+    try {
+      await _fetchTransactions();
+      await _fetchNarudzbe();
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _fetchNarudzbe() async {
     try {
       var result = await _ordersProvider.get();
-      print(result.result);
+      var filteredOrders =
+          result.result.where((order) => order.status == null).toList();
+      for (var order in filteredOrders) {
+        for (var t in transactions) {
+          if (order.orderHeaderId == t.orderHeaderId) {
+            _narudzba.add(order);
+          }
+        }
+      }
+
       setState(() {
-        _narudzba = result.result;
         isLoading = false;
       });
     } catch (e) {
@@ -39,16 +62,60 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
     }
   }
 
+  Future<void> _fetchTransactions() async {
+    try {
+      var data = await _transactionsProvider.get();
+
+      setState(() {
+        transactions = data.result.toList();
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders'),
+        title: Text('Orders', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue,
       ),
       body: Column(
         children: [
+          SizedBox(height: 16),
+          _buildBigBlueButton(),
+          SizedBox(height: 16),
           _buildDataListView(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBigBlueButton() {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CompletedOrdersScreen(),
+          ));
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            'Pregledaj obrađene narudžbe',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+        ),
       ),
     );
   }

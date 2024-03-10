@@ -23,7 +23,7 @@ namespace eDentist.Model.Requests
         [Compare("RepeatPassword", ErrorMessage = "Passwords do not match.")]
         public string? Password { get; set; }
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
-        public string RepeatPassword { get; set; }
+        public string? RepeatPassword { get; set; }
 
         public string? Adress { get; set; }
 

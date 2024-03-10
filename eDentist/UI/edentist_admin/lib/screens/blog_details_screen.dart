@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:eprodaja_admin/models/blog_post.dart';
 import 'package:eprodaja_admin/models/search_result.dart';
 import 'package:eprodaja_admin/providers/blog_post_provider.dart';
+import 'package:eprodaja_admin/screens/blog_screen.dart';
 import 'package:eprodaja_admin/widgets/master_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +98,7 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
                     print(_formKey.currentState?.value);
 
                     var request = new Map.from(_formKey.currentState!.value);
-                    request['image'] = _base64Image;
+                    request['slika'] = _base64Image;
 
                     try {
                       if (widget.post == null) {
@@ -109,6 +110,13 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
                           ),
                         );
                         _formKey.currentState?.reset();
+                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => BlogListPage(),
+                          ),
+                        );
                       } else {
                         print(request);
                         await _blogProvider.update(
@@ -120,6 +128,12 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
                           ),
                         );
                         Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => BlogListPage(),
+                          ),
+                        );
                       }
                     } on Exception catch (e) {
                       showDialog(
@@ -140,7 +154,7 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
           ],
         )
       ]),
-      title: this.widget.post?.headline ?? "Blog details",
+      title: this.widget.post?.headline ?? "Dodaj novi blog",
     );
   }
 
@@ -185,7 +199,7 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
               children: [
                 Expanded(
                     child: FormBuilderField(
-                  name: 'image',
+                  name: 'slika',
                   builder: ((field) {
                     return InputDecorator(
                       decoration: InputDecoration(

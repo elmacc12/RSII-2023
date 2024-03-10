@@ -10,7 +10,6 @@ class Product {
   String? barcode;
   String? productDescription;
   int productPrice;
-  int quantityLeft;
   String? slika;
   int productTypeId;
 
@@ -20,7 +19,6 @@ class Product {
     this.barcode,
     this.productDescription,
     this.productPrice,
-    this.quantityLeft,
     this.slika,
     this.productTypeId,
   );

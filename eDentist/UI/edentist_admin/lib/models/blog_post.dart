@@ -7,11 +7,11 @@ class BlogPost {
   int blogId;
   String? headline;
   String? content;
-  String? image;
+  String? slika;
   DateTime createdAt;
 
   BlogPost(
-      this.blogId, this.headline, this.content, this.image, this.createdAt);
+      this.blogId, this.headline, this.content, this.slika, this.createdAt);
 
   factory BlogPost.fromJson(Map<String, dynamic> json) =>
       _$BlogPostFromJson(json);

@@ -196,14 +196,14 @@ class _CartScreenState extends State<CartScreen> {
 
               setState(() {});
 
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => PaypalScreen(
-                  items: items,
-                  korisnikId: patientId,
-                  narudzbaId: response?.orderHeaderId,
-                  // iznos: response?.totalPrice),
-                ),
-              ));
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => PaypalScreen(
+                        items: items,
+                        userId: patientId,
+                        narudzbaId: response?.orderHeaderId,
+                        iznos: response?.totalPrice)),
+              );
             },
       child: const Text("Buy"),
     );

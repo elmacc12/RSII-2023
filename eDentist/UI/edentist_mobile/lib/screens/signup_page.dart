@@ -1,3 +1,4 @@
+import 'package:edentist_mobile/models/user.dart';
 import 'package:edentist_mobile/providers/user_provider.dart';
 import 'package:edentist_mobile/screens/product_list_screen.dart';
 import 'package:edentist_mobile/utils/util.dart';
@@ -15,7 +16,6 @@ class SignUpPage extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  final TextEditingController _zipCodeController = TextEditingController();
 
   late UserProvider _korisniciProvider;
 
@@ -76,14 +76,6 @@ class SignUpPage extends StatelessWidget {
                       prefixIcon: Icon(Icons.location_on),
                     ),
                     controller: _addressController,
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: "Zip code",
-                      prefixIcon: Icon(Icons.location_on),
-                    ),
-                    controller: _zipCodeController,
                   ),
                   const SizedBox(height: 8),
                   TextField(
@@ -157,17 +149,30 @@ class SignUpPage extends StatelessWidget {
                           ),
                         );
                       } else {
-                        Map order = {
-                          "roleID": 2,
-                          "name": _firstnameController.text,
-                          "surname": _lastnameController.text,
-                          "email": _emailController.text,
-                          "username": _usernameController.text,
-                          "adress": _addressController.text,
-                          "zipCode": _zipCodeController.text,
-                        };
+                        var request = new User(
+                            0,
+                            2,
+                            _firstnameController.text,
+                            _lastnameController.text,
+                            _emailController.text,
+                            _usernameController.text,
+                            _addressController.text,
+                            1,
+                            null,
+                            _passwordController.text,
+                            _confirmPasswordController.text);
+                        // Map order = {
+                        //   "roleID": 2,
+                        //   "name": _firstnameController.text,
+                        //   "surname": _lastnameController.text,
+                        //   "email": _emailController.text,
+                        //   "username": _usernameController.text,
+                        //   "password": _passwordController.text,
+                        //   "repeatPassword": _confirmPasswordController,
+                        //   "adress": _addressController.text,
+                        // };
 
-                        var x = await _korisniciProvider.SignUp(order);
+                        var x = await _korisniciProvider.insert(request);
                         print(x);
                         if (x != null) {
                           Authorization.username = _usernameController.text;

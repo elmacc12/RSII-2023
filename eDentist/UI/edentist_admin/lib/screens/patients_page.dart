@@ -1,12 +1,8 @@
-import 'package:eprodaja_admin/models/dental_service.dart';
 import 'package:eprodaja_admin/models/user.dart';
-import 'package:eprodaja_admin/providers/dentalService_provider.dart';
 import 'package:eprodaja_admin/providers/user_provider.dart';
 import 'package:eprodaja_admin/screens/medical_card_page.dart';
 import 'package:flutter/material.dart';
-import '../widgets/blue_button.dart'; // Assuming you have this widget
-
-// Import your DentalService class and JSON builder here
+import '../widgets/blue_button.dart';
 
 class PatientsPage extends StatefulWidget {
   @override
@@ -18,11 +14,11 @@ class _PatientsPageState extends State<PatientsPage> {
 
   List<User> users = [];
   bool isLoading = true;
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // Call your method to fetch dental services here
     fetchData();
   }
 
@@ -35,12 +31,20 @@ class _PatientsPageState extends State<PatientsPage> {
         isLoading = false;
       });
     } catch (e) {
-      // Handle error
       print(e);
       setState(() {
         isLoading = false;
       });
     }
+  }
+
+  List<User> getFilteredUsers(String searchTerm) {
+    return users
+        .where((e) =>
+            e.roleID == 2 &&
+            (e.name!.toLowerCase().contains(searchTerm.toLowerCase()) ||
+                e.surname!.toLowerCase().contains(searchTerm.toLowerCase())))
+        .toList();
   }
 
   @override
@@ -53,21 +57,18 @@ class _PatientsPageState extends State<PatientsPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Search Field
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: searchController,
               decoration: InputDecoration(
-                hintText: 'Search',
-                prefixIcon: Icon(Icons.search),
+                labelText: 'Pretraži pacijente',
               ),
               onChanged: (value) {
-                // Implement your search logic here
-                // You may want to update the DataTable based on the search input
+                setState(() {});
               },
             ),
           ),
-          // Table
           Expanded(
             child: SingleChildScrollView(
               child: DataTable(
@@ -76,12 +77,11 @@ class _PatientsPageState extends State<PatientsPage> {
                   DataColumn(label: Text('Prezime')),
                   DataColumn(label: Text('Uredi')),
                 ],
-                rows: users.where((e) => e.roleID == 2).map((u) {
+                rows: getFilteredUsers(searchController.text).map((u) {
                   return DataRow(
                     cells: [
                       DataCell(Text(u.name ?? "")),
                       DataCell(Text(u.surname ?? "")),
-                      // Blue Button
                       DataCell(
                         BlueButton(
                           text: "Pregledaj",

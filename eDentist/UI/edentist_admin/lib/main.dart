@@ -1,5 +1,6 @@
 import 'package:eprodaja_admin/providers/appointments_provider.dart';
 import 'package:eprodaja_admin/providers/blog_post_provider.dart';
+import 'package:eprodaja_admin/providers/city_provider.dart';
 import 'package:eprodaja_admin/providers/color_prvider.dart';
 import 'package:eprodaja_admin/providers/dentalService_provider.dart';
 import 'package:eprodaja_admin/providers/login_provider.dart';
@@ -7,6 +8,7 @@ import 'package:eprodaja_admin/providers/order_details_provider.dart';
 import 'package:eprodaja_admin/providers/orders_provider.dart';
 import 'package:eprodaja_admin/providers/product_provider.dart';
 import 'package:eprodaja_admin/providers/product_type_provider.dart';
+import 'package:eprodaja_admin/providers/transakcije_provider.dart';
 import 'package:eprodaja_admin/providers/user_provider.dart';
 import 'package:eprodaja_admin/screens/dental_service_page.dart';
 
@@ -65,6 +67,8 @@ class MyMaterialApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => OrderDetailsProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => OrderDetailsState()),
+        ChangeNotifierProvider(create: (_) => TransactionsProvider()),
+        ChangeNotifierProvider(create: (_) => CityProvider()),
       ],
       child: MaterialApp(
         title: 'RS II Material app',

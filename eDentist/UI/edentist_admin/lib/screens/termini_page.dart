@@ -62,6 +62,7 @@ class _TerminiPageState extends State<TerminiPage> {
                 child: Text(
                   'Dodaj novi termin',
                   textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),

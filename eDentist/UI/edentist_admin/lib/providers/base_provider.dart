@@ -15,7 +15,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   BaseProvider(String endpoint) {
     _endpoint = endpoint;
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://localhost:7015/");
+        defaultValue: "http://localhost:5192/");
   }
 
   Future<SearchResult<T>> get({dynamic filter}) async {
@@ -32,6 +32,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var response = await http.get(uri, headers: headers);
 
     if (isValidResponse(response)) {
+      print("response: ${response.request}");
       var data = jsonDecode(response.body);
 
       var result = SearchResult<T>();
@@ -46,7 +47,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
     } else {
       throw new Exception("Unknown error");
     }
-    // print("response: ${response.request} ${response.statusCode}, ${response.body}");
   }
 
   Future<T> getById(int id) async {

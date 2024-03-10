@@ -4,10 +4,11 @@ part 'favorite.g.dart';
 
 @JsonSerializable()
 class Favorite {
+  int favoriteId;
   int userId;
   int productId;
 
-  Favorite(this.userId, this.productId);
+  Favorite(this.favoriteId, this.userId, this.productId);
 
   factory Favorite.fromJson(Map<String, dynamic> json) =>
       _$FavoriteFromJson(json);

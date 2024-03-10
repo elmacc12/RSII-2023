@@ -11,22 +11,23 @@ class User {
   String? email;
   String? username;
   String? adress;
-  String? zipCode;
   int cityId;
   String? slika;
+  String? password;
+  String? repeatPassword;
 
   User(
-    this.userId,
-    this.roleID,
-    this.name,
-    this.surname,
-    this.email,
-    this.username,
-    this.adress,
-    this.zipCode,
-    this.cityId,
-    this.slika,
-  );
+      this.userId,
+      this.roleID,
+      this.name,
+      this.surname,
+      this.email,
+      this.username,
+      this.adress,
+      this.cityId,
+      this.slika,
+      this.password,
+      this.repeatPassword);
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);

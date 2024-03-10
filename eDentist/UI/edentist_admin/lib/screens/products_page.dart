@@ -1,12 +1,11 @@
+import 'dart:async';
 import 'package:eprodaja_admin/models/product.dart';
 import 'package:eprodaja_admin/models/search_result.dart';
 import 'package:eprodaja_admin/providers/product_provider.dart';
 import 'package:eprodaja_admin/screens/product_detail_screen.dart';
 import 'package:eprodaja_admin/utils/util.dart';
-import 'package:eprodaja_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ProductsPage extends StatefulWidget {
@@ -20,35 +19,33 @@ class _ProductListScreenState extends State<ProductsPage> {
   late ProductProvider _productProvider;
   SearchResult<Product>? result;
   bool isLoading = true;
-  TextEditingController _ftsController = TextEditingController();
-  TextEditingController _sifraController = TextEditingController();
-  final _formKey = GlobalKey<FormBuilderState>();
-
-  String _selectedSortDirection = 'ascending';
+  String searchText = "";
+  late bool isSortAscending; // Added variable to track sorting order
 
   @override
   void initState() {
     super.initState();
     _productProvider = Provider.of<ProductProvider>(context, listen: false);
     _fetchProducts();
+    isSortAscending = true; // Set default sorting order
   }
 
   Future<void> _fetchProducts() async {
     try {
-      var data = await _productProvider.get(filter: {
-        'fts': _ftsController.text,
-        'sifra': _sifraController.text,
-      });
+      var data = await _productProvider.get();
 
       setState(() {
         result = data;
-        if (_selectedSortDirection == 'ascending') {
-          result?.result
-              .sort((a, b) => a.productPrice!.compareTo(b.productPrice!));
-        } else {
-          result?.result
-              .sort((a, b) => b.productPrice!.compareTo(a.productPrice!));
-        }
+
+        // Sort products based on the selected order
+        result?.result.sort((a, b) {
+          if (isSortAscending) {
+            return a.productPrice!.compareTo(b.productPrice!);
+          } else {
+            return b.productPrice!.compareTo(a.productPrice!);
+          }
+        });
+
         isLoading = false;
       });
     } catch (e) {
@@ -61,165 +58,141 @@ class _ProductListScreenState extends State<ProductsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MasterScreenWidget(
-      title_widget: Text("Proizvodi"),
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: Text('Proizvodi', style: TextStyle(color: Colors.white)),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildSearch(),
-          _buildDataListView(),
+          SizedBox(height: 16),
+          _buildSearchInput(),
+          _buildSortDropdown(), // Added dropdown for sorting
+          Expanded(
+            child: _buildProductList(),
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSearch() {
-    return FormBuilder(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                decoration:
-                    InputDecoration(labelText: "Product name or product code"),
-                controller: _ftsController,
-                onChanged: (_) => _fetchProducts(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ProductDetailScreen(
+                product: null,
               ),
             ),
-            SizedBox(width: 8),
-            DropdownButton<String>(
-              value: _selectedSortDirection,
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedSortDirection = newValue!;
-                  _fetchProducts();
-                });
-              },
-              items: <String>['ascending', 'descending']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            SizedBox(width: 8),
-            ElevatedButton(
-              onPressed: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailScreen(
-                      product: null,
-                    ),
-                  ),
-                );
+          );
 
-                // Refresh products after adding a new product
-                _fetchProducts();
-              },
-              child: Text("Add"),
-            ),
-          ],
-        ),
+          // Refresh products after adding a new product
+          _fetchProducts();
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.blue,
       ),
     );
   }
 
-  Widget _buildDataListView() {
+  Widget _buildSearchInput() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: FormBuilderTextField(
+        name: 'search',
+        decoration: InputDecoration(
+          labelText: 'Search by product name',
+        ),
+        onChanged: (value) {
+          setState(() {
+            searchText = value ?? "";
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _buildSortDropdown() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DropdownButton<bool>(
+        value: isSortAscending,
+        onChanged: (value) {
+          setState(() {
+            isSortAscending = value!;
+            _fetchProducts(); // Refresh products when changing sorting order
+          });
+        },
+        items: [
+          DropdownMenuItem<bool>(
+            value: true,
+            child: Text('Sortiraj rastuce'),
+          ),
+          DropdownMenuItem<bool>(
+            value: false,
+            child: Text('Sortiraj opadajuce'),
+          ),
+        ],
+        hint: Text('Select Sorting Order'),
+      ),
+    );
+  }
+
+  Widget _buildProductList() {
     if (result?.result == null) {
       return Center(
         child: Text('No products found.'),
       );
     }
 
-    return Expanded(
-      child: SingleChildScrollView(
-        child: DataTable(
-          columns: [
-            const DataColumn(
-              label: const Expanded(
-                child: const Text(
-                  'Sifra',
-                  style: const TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
+    // Filter products based on the search text
+    List<Product> filteredProducts = result?.result
+            ?.where((product) =>
+                product.productName
+                    ?.toLowerCase()
+                    .contains(searchText.toLowerCase()) ==
+                true)
+            .toList() ??
+        [];
+
+    return ListView.builder(
+      itemCount: filteredProducts.length,
+      itemBuilder: (context, index) {
+        Product product = filteredProducts[index];
+
+        return Card(
+          margin: EdgeInsets.all(8),
+          child: ListTile(
+            title: Text(product.productName ?? ""),
+            subtitle: Text(
+                'Sifra: ${product.barcode} - Cijena: ${product.productPrice}'),
+            leading: product.slika != ""
+                ? Container(
+                    width: 60,
+                    height: 60,
+                    child: imageFromBase64String(product.slika!),
+                  )
+                : Icon(Icons.image),
+            trailing: IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                _showDeleteConfirmationDialog(product);
+              },
             ),
-            const DataColumn(
-              label: const Expanded(
-                child: const Text(
-                  'Naziv proizvoda',
-                  style: const TextStyle(fontStyle: FontStyle.italic),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailScreen(
+                    product: product,
+                  ),
                 ),
-              ),
-            ),
-            const DataColumn(
-              label: const Expanded(
-                child: const Text(
-                  'Cijena',
-                  style: const TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: const Expanded(
-                child: const Text(
-                  'Slika',
-                  style: const TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: const Expanded(
-                child: const Text(''),
-              ),
-            ),
-          ],
-          rows: result!.result
-              .map(
-                (Product e) => DataRow(
-                  onSelectChanged: (selected) {
-                    if (selected == true) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ProductDetailScreen(
-                            product: e,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  cells: [
-                    DataCell(Text(e.barcode ?? "")),
-                    DataCell(Text(e.productName ?? "")),
-                    DataCell(Text(e.productPrice.toString())),
-                    DataCell(
-                      e.slika != ""
-                          ? Container(
-                              width: 100,
-                              height: 100,
-                              child: imageFromBase64String(e.slika!),
-                            )
-                          : Text(""),
-                    ),
-                    DataCell(
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          _showDeleteConfirmationDialog(e);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              )
-              .toList(),
-        ),
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
-  void _showDeleteConfirmationDialog(Product e) {
+  void _showDeleteConfirmationDialog(Product product) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -235,7 +208,7 @@ class _ProductListScreenState extends State<ProductsPage> {
             ),
             TextButton(
               onPressed: () async {
-                await _deleteProduct(e);
+                await _deleteProduct(product);
                 Navigator.of(context).pop();
               },
               child: Text('Delete'),

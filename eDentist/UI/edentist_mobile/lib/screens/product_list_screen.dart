@@ -1,3 +1,4 @@
+import 'package:edentist_mobile/models/favorite.dart';
 import 'package:edentist_mobile/models/product.dart';
 import 'package:edentist_mobile/models/search_result.dart';
 import 'package:edentist_mobile/providers/cart_provider.dart';
@@ -50,10 +51,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
     try {
       _productProvider = Provider.of<ProductProvider>(context, listen: false);
       _cartProvider = Provider.of<CartProvider>(context, listen: false);
-      var data = await _productProvider.get(filter: {
-        'fts': _ftsController.text,
-        'sifra': _sifraController.text,
-      });
+      var data =
+          await _productProvider.get(filter: {'FTS': _ftsController.text});
 
       setState(() {
         result = data;
@@ -79,48 +78,39 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return MasterScreenWidget(
       titleWidget: Text("Products"),
       child: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSearch(),
-              Container(
-                height: 200,
-                child: GridView(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      childAspectRatio: 4 / 3,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 30),
-                  scrollDirection: Axis.horizontal,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSearch(),
+            Container(
+              height: 200,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
                   children: _buildProductCardList(result, false),
                 ),
               ),
-              SizedBox(
-                height: 15,
+            ),
+            SizedBox(height: 15),
+            Text(
+              "Recommended products:",
+              style: TextStyle(
+                color: Colors.blueGrey,
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
               ),
-              Text(
-                "Recommended products:",
-                style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(height: 15),
-              Container(
-                height: 200,
-                child: GridView(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      childAspectRatio: 4 / 3,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 30),
-                  scrollDirection: Axis.horizontal,
+            ),
+            SizedBox(height: 15),
+            Container(
+              height: 200,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
                   children: _buildProductCardList(resultRecomm, true),
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -267,19 +257,29 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               await _favoritesProvider.exists(x.productId!);
 
                           if (!isProductFavorite) {
-                            _favoritesProvider.sendRabbit({
-                              "ProizvodId": x.proizvodID,
-                              "KorisnikId": await getPatientId(),
-                            });
+                            int korisnikId = await getPatientId();
+                            Favorite noviFavorit =
+                                new Favorite(0, korisnikId, x.productId!);
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.green,
-                                duration: Duration(milliseconds: 1000),
-                                content: Text(
-                                    "Item ${x.naziv} successfully added to favorites."),
-                              ),
-                            );
+                            try {
+                              await _favoritesProvider.insert(noviFavorit);
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.green,
+                                  duration: Duration(milliseconds: 1000),
+                                  content: Text(
+                                      "Item ${x.productName} successfully added to favorites."),
+                                ),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      "Failed to add item to favorites. Please try again."),
+                                ),
+                              );
+                            }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

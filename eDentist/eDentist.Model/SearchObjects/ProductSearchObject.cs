@@ -8,5 +8,6 @@ namespace eDentist.Model.SearchObjects
 {
     public class ProductSearchObject:BaseSearchObject
     {
+        public string? FTS { get; set; }
     }
 }
