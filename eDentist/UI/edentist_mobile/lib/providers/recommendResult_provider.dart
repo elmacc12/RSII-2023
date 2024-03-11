@@ -11,7 +11,7 @@ class RecommendResultProvider<T> extends BaseProvider<RecommendResult> {
 
   RecommendResultProvider() : super("RecommendResult") {
     _mainBaseUrl = const String.fromEnvironment("mainBaseUrl",
-        defaultValue: "https://localhost:7015/");
+        defaultValue: "http://10.0.2.2:5192/");
   }
 
   @override

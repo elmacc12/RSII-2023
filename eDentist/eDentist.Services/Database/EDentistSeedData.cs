@@ -368,8 +368,96 @@ namespace eDentist.Services.Database
                       Slika = null,
                       ProductTypeId = 4,
                       StateMachine = "Active"
-                  }
-    ) ;
+                  },
+                   new Product
+                   {
+                       ProductId = 3,
+                       ProductName = "Colgate Total",
+                       Barcode = "123456789003",
+                       ProductDescription = "Colgate Total pasta za zube pruža dugotrajnu sveobuhvatnu zaštitu vaših zuba i desni. Smanjuje plak, jača zubnu gleđ i pruža svež dah.",
+                       ProductPrice = 7,
+                       Slika = null,
+                       ProductTypeId = 2,
+                       StateMachine = "Active"
+                   },
+                  new Product
+                  {
+                      ProductId = 4,
+                      ProductName = "Oral-B Pro 1000",
+                      Barcode = "123456789004",
+                      ProductDescription = "Električna četkica za zube Oral-B Pro 1000 pruža učinkovito čišćenje zuba i desni. Ima senzor pritiska koji vas upozorava ako previše pritiskate prilikom četkanja.",
+                      ProductPrice = 40,
+                      Slika = null,
+                      ProductTypeId = 3,
+                      StateMachine = "Active"
+                  },
+                 new Product
+                 {
+                     ProductId = 5,
+                     ProductName = "Sensodyne Pronamel",
+                     Barcode = "123456789005",
+                     ProductDescription = "Sensodyne Pronamel pasta za zube štiti od erozije zubne gleđi i pomaže u smanjenju osetljivosti zuba na toplo, hladno, slatko ili kiselo.",
+                     ProductPrice = 8,
+                     Slika = null,
+                     ProductTypeId = 2,
+                     StateMachine = "Active"
+                 },
+                 new Product
+                 {
+                     ProductId = 6,
+                     ProductName = "Crest 3D White",
+                     Barcode = "123456789006",
+                     ProductDescription = "Crest 3D White pasta za beljenje zuba uklanja mrlje s površine zuba i pruža sjajno beli osmeh. Formulirana s aktivnim sastojcima za izbeljivanje.",
+                     ProductPrice = 12,
+                     Slika = null,
+                     ProductTypeId = 1,
+                     StateMachine = "Active"
+                 },
+                 new Product
+                 {
+                     ProductId = 7,
+                     ProductName = "Listerine Total Care",
+                     Barcode = "123456789007",
+                     ProductDescription = "Listerine Total Care rastvor za ispiranje usta pruža sveobuhvatnu zaštitu od gingivitisa, kamenca, lošeg daha i drugih problema s ustima.",
+                     ProductPrice = 15,
+                     Slika = null,
+                     ProductTypeId = 4,
+                     StateMachine = "Active"
+                 },
+                 new Product
+                 {
+                     ProductId = 8,
+                     ProductName = "Waterpik Aquarius",
+                     Barcode = "123456789008",
+                     ProductDescription = "Waterpik Aquarius je električni uređaj za oralno ispiranje koji pomaže u uklanjanju zubnog plaka i poboljšava zdravlje desni. Idealan za korišćenje kod kuće.",
+                     ProductPrice = 50,
+                     Slika = null,
+                     ProductTypeId = 3,
+                     StateMachine = "Active"
+                 },
+                 new Product
+                 {
+                     ProductId = 9,
+                     ProductName = "Arm & Hammer Advance White",
+                     Barcode = "123456789009",
+                     ProductDescription = "Arm & Hammer Advance White pasta za zube sadrži posebne sastojke koji pomažu u beljenju zuba i pružaju dugotrajan osećaj svežine.",
+                     ProductPrice = 9,
+                     Slika = null,
+                     ProductTypeId = 2,
+                     StateMachine = "Active"
+                 },
+                 new Product
+                 {
+                     ProductId = 10,
+                     ProductName = "Philips Sonicare DiamondClean",
+                     Barcode = "123456789010",
+                     ProductDescription = "Philips Sonicare DiamondClean je električna četkica za zube koja nudi naprednu tehnologiju čišćenja i pomaže u uklanjanju do 10 puta više plaka u poređenju s ručnim četkama.",
+                     ProductPrice = 120,
+                     Slika = null,
+                     ProductTypeId = 3,
+                     StateMachine = "Active"
+                 }
+                 ) ;
 
             modelBuilder.Entity<Favorite>().HasData(
                new Favorite
@@ -380,42 +468,36 @@ namespace eDentist.Services.Database
                }
            );
 
-            modelBuilder.Entity<OrderHeader>().HasData(
-                new OrderHeader
-                {
-                    OrderHeaderId = 1,
-                    OrderDate = DateTime.Now,
-                    UserId = 2,
-                    TotalPrice = 10,
-                    Status = null
-                },
-                new OrderHeader
-                {
-                    OrderHeaderId = 2,
-                    OrderDate = DateTime.Now,
-                    UserId = 2,
-                    TotalPrice = 20,
-                    Status = "closed"
-                }
-            );
+            for (int i = 1; i <= 15; i++)
+            {
+                modelBuilder.Entity<OrderHeader>().HasData(
+                    new OrderHeader
+                    {
+                        OrderHeaderId = i,
+                        OrderDate = DateTime.Now,
+                        UserId = 2,
+                        TotalPrice = i * 10,
+                        Status = null
+                    }
+                );
 
-            modelBuilder.Entity<Order>().HasData(
-         new Order
-         {
-             OrderId = 1,
-             OrderHeaderId = 1,
-             ProductId = 1,
-             Quantity = 2
-         },
-         new Order
-         {
-             OrderId = 2,
-             OrderHeaderId = 2,
-             ProductId = 2,
-             Quantity = 2
-         }
-     );
-            
+               
+                for (int j = 1; j <= 3; j++)
+                {
+                    int orderId = (i - 1) * 3 + j;
+
+                    modelBuilder.Entity<Order>().HasData(
+                        new Order
+                        {
+                            OrderId = orderId,
+                            OrderHeaderId = i,
+                            ProductId = j,
+                            Quantity = 2
+                        }
+                    );
+                }
+            }
+
             modelBuilder.Entity<Transactions>().HasData(
                 new Transactions
                 {

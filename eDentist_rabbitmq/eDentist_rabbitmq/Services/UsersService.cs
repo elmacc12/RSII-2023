@@ -18,8 +18,10 @@ namespace eDentist.Services.Services
         protected EDentistDbContext _context;
         protected IMapper _mapper { get; set; }
 
-        public UsersService()
+        public UsersService(EDentistDbContext context, IMapper mapper)
         {
+            _context = context;
+            _mapper = mapper;
         }
 
         public static string GenerateSalt()
