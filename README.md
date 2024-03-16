@@ -12,15 +12,18 @@ Reports: Access reports and analytics.
 ### Users credentials
 
 Mobile app: 
-          User: username:korisnik
-                password:korisnik
-Desktop app:
-            Admin: username:admin
-                   password:admin
+User: 
+username:korisnik
+password:korisnik
 
-Paypal sandbox account: 
-                      email: sb-stgvm29124926@business.example.com
-                      password: dD)zd+7K
+Desktop app:
+Admin: 
+username:admin
+password:admin
+
+Paypal sandbox account:
+email: sb-stgvm29124926@business.example.com
+password: dD)zd+7K
 
 ### Run the app
 
