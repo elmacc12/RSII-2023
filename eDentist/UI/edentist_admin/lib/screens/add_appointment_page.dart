@@ -274,8 +274,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
             .update(widget.termin!.appointmentID!, widget.termin!);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'Terimin "${widget.termin?.appointmentID}" je uspješno uređen'),
+            content: Text('Terimin je uspješno uređen'),
             backgroundColor: Colors.green,
           ),
         );
@@ -318,8 +317,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         final insertedTermin = await AppointmentsProvider().insert(newTermin);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Termin "${insertedTermin.appointmentID}" uspješno dodan'),
+            content: Text('Termin je uspješno dodan'),
             backgroundColor: Colors.green,
           ),
         );

@@ -67,7 +67,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         Provider.of<ProductDetailState>(context, listen: false);
 
     return MasterScreenWidget(
-      // ignore: sort_child_properties_last
       child: Column(children: [
         isLoading ? Container() : _buildForm(),
         Row(
@@ -105,7 +104,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                              'Please fix all required fields before saving.'),
+                              'Molimo popunite sva obavezna polja prije spasavanja.'),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -195,7 +194,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     name: 'barcode',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Product code is required';
+                        return 'Kod je obavezan';
                       }
                       return null;
                     },
@@ -210,7 +209,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     name: 'productName',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Product name is required';
+                        return 'Naziv proizvoda je obavezan';
                       }
                       return null;
                     },
@@ -222,7 +221,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     name: 'productDescription',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Product description is required';
+                        return 'Opis proizvoda je obavezan';
                       }
                       return null;
                     },
@@ -246,7 +245,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Product Type is required';
+                        return 'Tip proizvoda je obavezan';
                       }
                       return null;
                     },
@@ -266,14 +265,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   name: 'productPrice',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Price is required";
+                      return "Cijena je obavezna";
                     }
                     final price = int.tryParse(value);
                     if (price == null) {
-                      return "Price must be a whole number";
+                      return "Cijena treba biti cijeli broj";
                     }
                     if (price < 1 || price > 10000) {
-                      return "Price must be between 1 and 10,000";
+                      return "Cijena treba biti izmedju 1 i 10 000";
                     }
                     return null;
                   },

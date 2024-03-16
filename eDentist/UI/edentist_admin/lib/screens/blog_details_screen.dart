@@ -22,10 +22,9 @@ class BlogDetailsScreen extends StatefulWidget {
 class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
-  //late ProductTypeProvider _vrsteProizvodaProvider;
+
   late BlogPostProvider _blogProvider;
 
-  //SearchResult<ProductType>? VrsteProizvodaResult;
   bool isLoading = true;
 
   @override
@@ -36,7 +35,6 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
       'content': widget.post?.content,
     };
 
-    //_vrsteProizvodaProvider = context.read<ProductTypeProvider>();
     _blogProvider = context.read<BlogPostProvider>();
 
     initForm();
@@ -48,8 +46,6 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
   }
 
   Future initForm() async {
-    //VrsteProizvodaResult = await _vrsteProizvodaProvider.get();
-
     setState(() {
       isLoading = false;
     });
@@ -57,11 +53,7 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // var productDetailState =
-    //     Provider.of<ProductDetailState>(context, listen: false);
-
     return MasterScreenWidget(
-      // ignore: sort_child_properties_last
       child: Column(children: [
         isLoading ? Container() : _buildForm(),
         Row(

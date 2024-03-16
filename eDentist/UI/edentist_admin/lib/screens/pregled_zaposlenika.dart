@@ -18,7 +18,6 @@ class _PregedZaposlenikaPageState extends State<PregedZaposlenika> {
   @override
   void initState() {
     super.initState();
-    // Call your method to fetch dental services here
     fetchData();
   }
 
@@ -31,7 +30,6 @@ class _PregedZaposlenikaPageState extends State<PregedZaposlenika> {
         isLoading = false;
       });
     } catch (e) {
-      // Handle error
       print(e);
       setState(() {
         isLoading = false;

@@ -256,10 +256,10 @@ class _DentalServicesPageState extends State<DentalServicesPage> {
               }
               final price = int.tryParse(value);
               if (price == null) {
-                return "Price must be a whole number";
+                return "Cijena mora biti cijeli broj";
               }
               if (price < 1 || price > 10000) {
-                return "Price must be between 1 and 10,000";
+                return "Cijena mora biti izmedju 1 i 10 000";
               }
               return null;
             },
@@ -287,7 +287,7 @@ class _DentalServicesPageState extends State<DentalServicesPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                          'Dental service ${isEditing ? 'updated' : 'added'} successfully.'),
+                          'Usluga ${isEditing ? 'uredjena' : 'dodana'} uspjesno.'),
                       backgroundColor: Colors.green,
                     ),
                   );

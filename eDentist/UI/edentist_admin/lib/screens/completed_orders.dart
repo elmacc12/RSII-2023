@@ -54,7 +54,6 @@ class _CompletedOrdersScreenState extends State<CompletedOrdersScreen> {
         isLoading = false;
       });
     } catch (e) {
-      // Handle error
       print(e);
       setState(() {
         isLoading = false;
@@ -82,7 +81,8 @@ class _CompletedOrdersScreenState extends State<CompletedOrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders', style: TextStyle(color: Colors.white)),
+        title:
+            Text('Obradjene narudzbe', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue,
       ),
       body: Column(
@@ -142,7 +142,7 @@ class _CompletedOrdersScreenState extends State<CompletedOrdersScreen> {
                       Text(narudzba.totalPrice.toString() ?? ''),
                       SizedBox(height: 8),
                       Text(
-                        'Created on: ${narudzba.orderDate != null ? DateFormat('yyyy-MM-dd').format(narudzba.orderDate!) : 'Unknown Date'}',
+                        'Kreirana: ${narudzba.orderDate != null ? DateFormat('yyyy-MM-dd').format(narudzba.orderDate!) : 'Datum nije poznat'}',
                         style: TextStyle(fontStyle: FontStyle.italic),
                       ),
                     ],

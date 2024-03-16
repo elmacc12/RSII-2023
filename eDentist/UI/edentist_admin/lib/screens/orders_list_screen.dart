@@ -82,7 +82,7 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders', style: TextStyle(color: Colors.white)),
+        title: Text('Narudzbe', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue,
       ),
       body: Column(
@@ -169,7 +169,7 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                       Text(narudzba.totalPrice.toString() ?? ''),
                       SizedBox(height: 8),
                       Text(
-                        'Created on: ${narudzba.orderDate != null ? DateFormat('yyyy-MM-dd').format(narudzba.orderDate!) : 'Unknown Date'}',
+                        'Kreirana: ${narudzba.orderDate != null ? DateFormat('yyyy-MM-dd').format(narudzba.orderDate!) : 'Nepoznat datum'}',
                         style: TextStyle(fontStyle: FontStyle.italic),
                       ),
                     ],

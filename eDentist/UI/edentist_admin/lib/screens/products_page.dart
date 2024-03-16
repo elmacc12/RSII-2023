@@ -20,14 +20,14 @@ class _ProductListScreenState extends State<ProductsPage> {
   SearchResult<Product>? result;
   bool isLoading = true;
   String searchText = "";
-  late bool isSortAscending; // Added variable to track sorting order
+  late bool isSortAscending;
 
   @override
   void initState() {
     super.initState();
     _productProvider = Provider.of<ProductProvider>(context, listen: false);
     _fetchProducts();
-    isSortAscending = true; // Set default sorting order
+    isSortAscending = true;
   }
 
   Future<void> _fetchProducts() async {
@@ -37,7 +37,6 @@ class _ProductListScreenState extends State<ProductsPage> {
       setState(() {
         result = data;
 
-        // Sort products based on the selected order
         result?.result.sort((a, b) {
           if (isSortAscending) {
             return a.productPrice!.compareTo(b.productPrice!);
@@ -68,7 +67,7 @@ class _ProductListScreenState extends State<ProductsPage> {
         children: [
           SizedBox(height: 16),
           _buildSearchInput(),
-          _buildSortDropdown(), // Added dropdown for sorting
+          _buildSortDropdown(),
           Expanded(
             child: _buildProductList(),
           ),
@@ -83,8 +82,6 @@ class _ProductListScreenState extends State<ProductsPage> {
               ),
             ),
           );
-
-          // Refresh products after adding a new product
           _fetchProducts();
         },
         child: Icon(Icons.add),
@@ -139,7 +136,7 @@ class _ProductListScreenState extends State<ProductsPage> {
   Widget _buildProductList() {
     if (result?.result == null) {
       return Center(
-        child: Text('No products found.'),
+        child: Text('Nema proizvoda.'),
       );
     }
 
@@ -197,8 +194,8 @@ class _ProductListScreenState extends State<ProductsPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this item?'),
+          title: Text('Potvrda brisanja'),
+          content: Text('Jeste li sigurni da zelite obrisati?'),
           actions: [
             TextButton(
               onPressed: () {

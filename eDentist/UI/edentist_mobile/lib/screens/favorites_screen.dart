@@ -58,7 +58,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      titleWidget: Text("Favorites"),
+      titleWidget: Text("Omiljeni"),
       child: ListView.builder(
         itemCount: favoriteProducts.length,
         itemBuilder: (context, index) {
@@ -75,7 +75,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   } else if (snapshot.hasError) {
                     return Text('Error');
                   } else if (!snapshot.hasData || snapshot.data == null) {
-                    return Text('Product not found');
+                    return Text('Proizvod nije pronadjen.');
                   } else {
                     final product = snapshot.data!;
 

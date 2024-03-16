@@ -46,9 +46,7 @@ class BlogDetailsScreen extends StatelessWidget {
         color: Colors.grey,
         margin: EdgeInsets.all(16),
         child: Text("No image",
-            style: TextStyle(
-                color: Colors.white, // Set text color to white
-                fontWeight: FontWeight.bold)),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       );
     } else {
       return Container(

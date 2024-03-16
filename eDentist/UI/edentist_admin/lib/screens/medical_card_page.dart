@@ -284,7 +284,7 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
             decoration: InputDecoration(labelText: 'Doctor\'s Opinion'),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter doctor\'s opinion';
+                return 'Misljenje je obavezno';
               }
               return null;
             },

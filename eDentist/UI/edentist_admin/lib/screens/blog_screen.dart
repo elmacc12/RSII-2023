@@ -79,7 +79,7 @@ class _BlogListPageState extends State<BlogListPage> {
   Widget _buildBlogList() {
     if (blogs.isEmpty) {
       return Center(
-        child: Text('No blogs available.'),
+        child: Text('Nema dostupnih blogova.'),
       );
     }
 

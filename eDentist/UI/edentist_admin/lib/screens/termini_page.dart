@@ -53,7 +53,6 @@ class _TerminiPageState extends State<TerminiPage> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
-              //onPrimary: Colors.white,
             ),
             child: SizedBox(
               width: double.infinity,
@@ -197,14 +196,13 @@ class _TerminiPageState extends State<TerminiPage> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Termin "${termin.appointmentID}" je uspješno obrisan'),
+          content: Text('Termin je uspješno obrisan'),
         ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text('Greška pri brisanju termina "${termin.appointmentID}".'),
+          content: Text('Greška pri brisanju termina.'),
         ),
       );
     }

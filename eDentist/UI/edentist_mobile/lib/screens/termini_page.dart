@@ -65,7 +65,7 @@ class _TerminiPageState extends State<TerminiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Appointments', style: TextStyle(color: Colors.white)),
+        title: Text('Termini', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue,
       ),
       body: Column(
@@ -217,14 +217,13 @@ class _TerminiPageState extends State<TerminiPage> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Termin "${termin.appointmentID}" je uspješno obrisan'),
+          content: Text('Termin je uspješno obrisan'),
         ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text('Greška pri brisanju termina "${termin.appointmentID}".'),
+          content: Text('Greška pri brisanju termina.'),
         ),
       );
     }

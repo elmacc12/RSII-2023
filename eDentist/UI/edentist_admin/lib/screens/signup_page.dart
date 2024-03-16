@@ -125,7 +125,7 @@ class SignUpPage extends StatelessWidget {
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
                                 title: const Text("Error"),
-                                content: const Text("All fields are required!"),
+                                content: const Text("Sva polja su obavezna!"),
                                 actions: [
                                   TextButton(
                                       onPressed: () => Navigator.pop(context),
@@ -140,7 +140,7 @@ class SignUpPage extends StatelessWidget {
                               builder: (BuildContext context) => AlertDialog(
                                 title: const Text("Error"),
                                 content: const Text(
-                                    "Password needs to match the confirmation password."),
+                                    "Passwordi se trebaju poklapati."),
                                 actions: [
                                   TextButton(
                                       onPressed: () => Navigator.pop(context),
@@ -155,7 +155,7 @@ class SignUpPage extends StatelessWidget {
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
                                 title: const Text("Error"),
-                                content: const Text("Incorrect email format."),
+                                content: const Text("Netacan format e-maila."),
                                 actions: [
                                   TextButton(
                                       onPressed: () => Navigator.pop(context),
@@ -176,16 +176,6 @@ class SignUpPage extends StatelessWidget {
                                 null,
                                 _passwordController.text,
                                 _confirmPasswordController.text);
-                            // Map order = {
-                            //   "roleID": 2,
-                            //   "name": _firstnameController.text,
-                            //   "surname": _lastnameController.text,
-                            //   "email": _emailController.text,
-                            //   "username": _usernameController.text,
-                            //   "password": _passwordController.text,
-                            //   "repeatPassword": _confirmPasswordController,
-                            //   "adress": _addressController.text,
-                            // };
 
                             var x = await _korisniciProvider.insert(request);
                             print(x);

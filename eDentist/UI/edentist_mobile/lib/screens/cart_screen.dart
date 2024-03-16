@@ -60,7 +60,7 @@ class _CartScreenState extends State<CartScreen> {
                 return _buildProductCard(_cartProvider.cart.items[index]);
               },
             )
-          : const Center(child: Text("Vaša košaroca je prazna.")),
+          : const Center(child: Text("Vaša kosarica je prazna.")),
     );
   }
 

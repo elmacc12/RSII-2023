@@ -38,7 +38,7 @@ class _BlogListPageState extends State<BlogListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Blog List'),
+        title: Text('Blogovi'),
       ),
       body: _buildBlogList(),
     );
@@ -47,7 +47,7 @@ class _BlogListPageState extends State<BlogListPage> {
   Widget _buildBlogList() {
     if (blogs.isEmpty) {
       return Center(
-        child: Text('No blogs available.'),
+        child: Text('Nema dostupnih blogova.'),
       );
     }
 
