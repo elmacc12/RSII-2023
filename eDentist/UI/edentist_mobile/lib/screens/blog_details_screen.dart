@@ -11,14 +11,13 @@ class BlogDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Blog Details'),
+        title: Text('Detalji bloga'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display Heading
             Text(
               blog.headline ?? "",
               style: TextStyle(
@@ -27,10 +26,8 @@ class BlogDetailsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.0),
-            // Display Image
             _buildBlogImage(),
             SizedBox(height: 16.0),
-            // Display Content
             Text(
               blog.content ?? "",
               style: TextStyle(fontSize: 16.0),

@@ -28,23 +28,22 @@ class _ProductListScreenState extends State<ProductListScreen> {
   SearchResult<Product>? result;
   SearchResult<Product>? resultRecomm;
   bool isLoading = true;
-  TextEditingController _ftsController = new TextEditingController();
-  TextEditingController _sifraController = new TextEditingController();
+  TextEditingController _ftsController = TextEditingController();
+  TextEditingController _sifraController = TextEditingController();
   final _formKey = GlobalKey<FormBuilderState>();
   List<Product> dataRecomm = [];
 
   late RecommendResultProvider _recommendResultProvider =
       RecommendResultProvider();
 
-  String _selectedSortDirection = 'ascending';
-
   @override
   void initState() {
     super.initState();
     _fetchProducts();
     _favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
+    _recommendResultProvider =
+        Provider.of<RecommendResultProvider>(context, listen: false);
     _korisniciProvider = Provider.of<UserProvider>(context, listen: false);
-    _recommendResultProvider = context.read<RecommendResultProvider>();
   }
 
   Future<void> _fetchProducts() async {
@@ -56,13 +55,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
       setState(() {
         result = data;
-        if (_selectedSortDirection == 'ascending') {
-          result?.result
-              .sort((a, b) => a.productPrice!.compareTo(b.productPrice!));
-        } else {
-          result?.result
-              .sort((a, b) => b.productPrice!.compareTo(a.productPrice!));
-        }
         isLoading = false;
       });
     } catch (e) {
@@ -82,27 +74,36 @@ class _ProductListScreenState extends State<ProductListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSearch(),
+            SizedBox(height: 15),
+            Text(
+              "Svi proizvodi:",
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 15),
             Container(
-              height: 200,
+              height: MediaQuery.of(context).size.height - 400,
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
+                child: Column(
                   children: _buildProductCardList(result, false),
                 ),
               ),
             ),
             SizedBox(height: 15),
             Text(
-              "Recommended products:",
+              "Preporuceno za vas:",
               style: TextStyle(
-                color: Colors.blueGrey,
-                fontSize: 25,
+                color: Colors.blue,
+                fontSize: 15,
                 fontWeight: FontWeight.w600,
               ),
             ),
             SizedBox(height: 15),
             Container(
-              height: 200,
+              height: 230,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -131,23 +132,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
               ),
             ),
             SizedBox(width: 8),
-            DropdownButton<String>(
-              value: _selectedSortDirection,
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedSortDirection = newValue!;
-                  _fetchProducts();
-                });
-              },
-              items: <String>['ascending', 'descending']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            SizedBox(width: 8),
           ],
         ),
       ),
@@ -156,7 +140,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   List<Widget> _buildProductCardList(dataX, bool rec) {
     if (rec == true && (result?.result.isEmpty ?? true)) {
-      return [Text("No recommended articles")];
+      return [Text("Nema preporuka")];
     }
     if (rec == false && (result?.result.isEmpty ?? true)) {
       return [Text("Loading...")];
@@ -164,6 +148,20 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
     List<Widget> list = (dataX?.result ?? [])
         .map((x) => Container(
+              margin: EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
               child: Column(
                 children: [
                   InkWell(
@@ -194,13 +192,16 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               .showSnackBar(const SnackBar(
                             backgroundColor: Colors.green,
                             duration: Duration(milliseconds: 1000),
-                            content: Text("Successful added to cart."),
+                            content: Text("Uspjesno dodano u kosaricu."),
                           ));
                           Product _x = x;
+
                           int id = _x.productId!;
                           try {
                             var recommendResult =
                                 await _recommendResultProvider.get();
+
+                            print(recommendResult.result);
                             var filteredRecommendation = recommendResult.result
                                 .where((x) => x.proizvodId == id)
                                 .toList();
@@ -208,14 +209,18 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               var matchingRecommendation =
                                   filteredRecommendation.first;
 
-                              print(recommendResult);
+                              print(recommendResult.result);
+                              print(recommendResult.result.length);
 
                               int prviProizvodID =
                                   matchingRecommendation.prviProizvodId!;
+                              print(prviProizvodID);
                               int drugiProizvodID =
                                   matchingRecommendation.drugiProizvodId!;
+                              print(drugiProizvodID);
                               int treciProizvodID =
                                   matchingRecommendation.treciProizvodId!;
+                              print(treciProizvodID);
 
                               var prviRecommendedProduct =
                                   await _productProvider
@@ -240,12 +245,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                 content:
-                                    Text("No matching recommendations found"),
+                                    Text("Nema preporuka za dati proizvod."),
                               ));
                             }
                           } on Exception catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("Something bad happened."),
+                              content: Text("Error. Something bad happened."),
                             ));
                           }
                         },
@@ -255,6 +260,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         onPressed: () async {
                           final isProductFavorite =
                               await _favoritesProvider.exists(x.productId!);
+
+                          print(isProductFavorite.toString());
 
                           if (!isProductFavorite) {
                             int korisnikId = await getPatientId();
@@ -269,22 +276,21 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                   backgroundColor: Colors.green,
                                   duration: Duration(milliseconds: 1000),
                                   content: Text(
-                                      "Item ${x.productName} successfully added to favorites."),
+                                      "Proizvod ${x.productName} uspjesno dodan u favorite."),
                                 ),
                               );
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(
-                                      "Failed to add item to favorites. Please try again."),
+                                  content:
+                                      Text("Greska sa dodavanjem u favorite."),
                                 ),
                               );
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content:
-                                    Text("Product is already in favorites."),
+                                content: Text("Proizvod je vec u favoritima."),
                               ),
                             );
                           }

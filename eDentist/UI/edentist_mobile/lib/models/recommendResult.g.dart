@@ -8,7 +8,7 @@ part of 'recommendResult.dart';
 
 RecommendResult _$RecommendResultFromJson(Map<String, dynamic> json) =>
     RecommendResult(
-      json['Id'] as int,
+      json['id'] as int,
       json['proizvodId'] as int?,
       json['drugiProizvodId'] as int?,
       json['treciProizvodId'] as int?,
@@ -16,7 +16,7 @@ RecommendResult _$RecommendResultFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$RecommendResultToJson(RecommendResult instance) =>
     <String, dynamic>{
-      'Id': instance.Id,
+      'id': instance.id,
       'proizvodId': instance.proizvodId,
       'prviProizvodId': instance.prviProizvodId,
       'drugiProizvodId': instance.drugiProizvodId,

@@ -59,53 +59,37 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       titleWidget: Text("Favorites"),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          columns: const [
-            DataColumn(label: Text('Image')),
-            DataColumn(label: Text('')),
-          ],
-          rows: favoriteProducts
-              .map((favorite) => DataRow(
-                    cells: [
-                      DataCell(
-                        favoriteProducts.isNotEmpty
-                            ? Container(
-                                width: 100,
-                                height: 100,
-                                child: FutureBuilder<Product?>(
-                                  future: _productProvider
-                                      .getById(favorite.productId!),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return CircularProgressIndicator();
-                                    } else if (snapshot.hasError) {
-                                      return Text('Error');
-                                    } else if (!snapshot.hasData ||
-                                        snapshot.data == null) {
-                                      return Text('Product not found');
-                                    } else {
-                                      final product = snapshot.data!;
-                                      return imageFromBase64String(
-                                          product.slika!);
-                                    }
-                                  },
-                                ),
-                              )
-                            : Text(""),
-                      ),
-                      DataCell(
-                        ElevatedButton(
-                          onPressed: () => _deleteFavorite(favorite.productId),
-                          child: Text('Delete'),
-                        ),
-                      ),
-                    ],
-                  ))
-              .toList(),
-        ),
+      child: ListView.builder(
+        itemCount: favoriteProducts.length,
+        itemBuilder: (context, index) {
+          final favorite = favoriteProducts[index];
+          return ListTile(
+            leading: Container(
+              width: 100,
+              height: 100,
+              child: FutureBuilder<Product?>(
+                future: _productProvider.getById(favorite.productId!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error');
+                  } else if (!snapshot.hasData || snapshot.data == null) {
+                    return Text('Product not found');
+                  } else {
+                    final product = snapshot.data!;
+
+                    return imageFromBase64String(product.slika!);
+                  }
+                },
+              ),
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.favorite),
+              onPressed: () => _deleteFavorite(favorite.favoriteId),
+            ),
+          );
+        },
       ),
     );
   }

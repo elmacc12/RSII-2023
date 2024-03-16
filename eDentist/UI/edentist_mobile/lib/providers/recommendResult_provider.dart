@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:edentist_mobile/models/recommendResult.dart';
 import 'package:edentist_mobile/providers/base_provider.dart';
 
-import '../models/product.dart';
-
 class RecommendResultProvider<T> extends BaseProvider<RecommendResult> {
   String? _mainBaseUrl;
   String _endpoint = "RecommendResult";

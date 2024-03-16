@@ -55,6 +55,7 @@ services:
     build:
       context: ./eDentist_rabbitmq/eDentist_rabbitmq
     environment:
+      - ConnectionStrings:DefaultConnection=Server=edentist_sql, 1433;Database=200020;User=sa;Password=Word5678?;ConnectRetryCount=0; TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
       - RABBITMQ_HOST=rabbitMQ
       - RABBITMQ_USERNAME=guest

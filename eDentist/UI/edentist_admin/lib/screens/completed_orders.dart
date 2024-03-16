@@ -2,6 +2,7 @@ import 'package:eprodaja_admin/models/order_header.dart';
 import 'package:eprodaja_admin/models/transakcije.dart';
 import 'package:eprodaja_admin/providers/orders_provider.dart';
 import 'package:eprodaja_admin/providers/transakcije_provider.dart';
+import 'package:eprodaja_admin/screens/closed_order_details_page.dart';
 import 'package:eprodaja_admin/screens/order_details.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -128,7 +129,7 @@ class _CompletedOrdersScreenState extends State<CompletedOrdersScreen> {
                     var refresh =
                         await Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
-                          OrderDetailsScreen(narudzba: narudzba),
+                          ClosedOrderDetailsScreen(narudzba: narudzba),
                     ));
                     if (refresh == 'reload') {
                       _fetchNarudzbe();

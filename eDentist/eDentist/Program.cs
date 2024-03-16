@@ -87,22 +87,21 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<EDentistDbContext>();
-
     if (!dataContext.Database.CanConnect())
     {
         dataContext.Database.Migrate();
 
-        // var recommendResutService = scope.ServiceProvider.GetRequiredService<IRecommendResultsService>();
-        //try
-        //{
-        //    await recommendResutService.TrainBooksModelAsync();
-        //}
-        //catch (Exception E)
-        //{
-
-        //}
+        var recommendResutService = scope.ServiceProvider.GetRequiredService<IRecommendResultService>();
+        try
+        {
+            await recommendResutService.TrainProductsModel();
+        }
+        catch (Exception e)
+        {
+        }
     }
 }
+
 
 string hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitMQ";
 string username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";

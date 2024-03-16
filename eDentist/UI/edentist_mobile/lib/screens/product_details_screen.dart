@@ -34,8 +34,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.product.productName ?? "Product Details"),
-      ),
+          backgroundColor: Colors.blue,
+          title: Text(widget.product.productName ?? "Product Details",
+              style: TextStyle(color: Colors.white))),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
