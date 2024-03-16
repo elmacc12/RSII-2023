@@ -1,7 +1,7 @@
-### MyDentist App
+# MyDentist App
 The Dentist Appointment App helps dentists manage appointments, patient records, and communication more efficiently.
 
-## Features:
+### Features:
 
 Appointment Scheduling: Easily schedule and manage patient appointments.
 Patient Management: Keep track of patient records, treatment plans, and contact info.
@@ -9,7 +9,7 @@ Billing and Invoicing: Generate bills and track payments.
 Staff Management: Assign roles and add staff.
 Reports: Access reports and analytics.
 
-## Users credentials
+### Users credentials
 
 Mobile app: 
           User: username:korisnik
@@ -22,7 +22,7 @@ Paypal sandbox account:
                       email: sb-stgvm29124926@business.example.com
                       password: dD)zd+7K
 
-## Run the app
+### Run the app
 
 Flutter commands: Flutter pub get
 
