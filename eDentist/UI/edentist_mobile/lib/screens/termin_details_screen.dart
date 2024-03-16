@@ -3,6 +3,7 @@ import 'package:edentist_mobile/models/search_result.dart';
 import 'package:edentist_mobile/models/user.dart';
 import 'package:edentist_mobile/providers/appointment_provider.dart';
 import 'package:edentist_mobile/providers/user_provider.dart';
+import 'package:edentist_mobile/screens/termini_page.dart';
 import 'package:edentist_mobile/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -247,7 +248,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         );
         Navigator.pop(context, widget.termin);
       } catch (e) {
-        print(e);
+        print(e.toString());
       }
     }
   }
@@ -299,6 +300,12 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
           ),
         );
         Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TerminiPage(),
+          ),
+        );
       } catch (e) {
         print(e);
       }

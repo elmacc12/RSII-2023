@@ -89,15 +89,10 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   Future<T> insert(dynamic request) async {
     var url = "$_baseUrl$_endpoint";
-    print("URIIIII ::::::::::::: ${url}");
     var uri = Uri.parse(url);
     var headers = createHeaders();
-
     var jsonRequest = jsonEncode(request);
-    print("jsonReq::::::::::::::: ${jsonRequest}");
     var response = await http!.post(uri, headers: headers, body: jsonRequest);
-    print("responseee::::::::::::::: ${response}");
-
     if (isValidResponse(response)) {
       print("response: ${response.request}");
       var data = jsonDecode(response.body);
