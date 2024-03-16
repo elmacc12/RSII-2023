@@ -62,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                           prefixIcon: Icon(Icons.password),
                         ),
                         controller: _passwordController,
+                        obscureText: true,
                       ),
                       const SizedBox(
                         height: 8,
@@ -85,13 +86,12 @@ class _LoginPageState extends State<LoginPage> {
                                 builder: (context) => const ProductListScreen(),
                               ),
                             );
-                          } on Exception {
+                          } on Exception catch (e) {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
                                 title: const Text("Error"),
-                                content:
-                                    const Text("Invalid username or password"),
+                                content: Text("err: $e"),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(context),

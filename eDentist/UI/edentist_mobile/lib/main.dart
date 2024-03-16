@@ -10,6 +10,7 @@ import 'package:edentist_mobile/providers/recommendResult_provider.dart';
 import 'package:edentist_mobile/providers/transakcija_provider.dart';
 import 'package:edentist_mobile/providers/user_provider.dart';
 import 'package:edentist_mobile/screens/login_screen.dart';
+import 'package:edentist_mobile/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

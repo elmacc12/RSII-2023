@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:eprodaja_admin/models/transakcije.dart';
 import 'package:eprodaja_admin/providers/transakcije_provider.dart';
 import 'package:eprodaja_admin/widgets/blue_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +52,7 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
         children: [
           SizedBox(height: 20),
           BlueButton(
-            text: 'Kreiraj izvještaj',
+            text: 'Kreiraj izvjestaj',
             width: 200,
             height: 40,
             onPressed: () async {
@@ -88,8 +91,8 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ListTile(
-            title: Text("Uplata za narudzbu: ${t.orderHeaderId.toString()}"),
-            subtitle: Text("Iznos uplate:${t.amount}"),
+            title: Text("Uplata za narudzbu ${t.orderHeaderId.toString()}"),
+            subtitle: Text("Iznos uplate ${t.amount.toString()}"),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -210,12 +213,12 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('Narudzba: ${t.orderHeaderId}'),
+                    pw.Text('Order ${t.orderHeaderId.toString()}'),
                   ],
                 ),
                 pw.Row(
                   children: [
-                    pw.Text('Iznos transakcije  ${t.amount}'),
+                    pw.Text('Amount ${t.amount.toString()}'),
                   ],
                 ),
               ],

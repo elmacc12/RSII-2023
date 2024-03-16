@@ -1303,7 +1303,7 @@ namespace eDentist.Services.Database
                      ProductTypeId = 3,
                      StateMachine = "draft"
                  }
-                 ) ;
+                 );
 
             modelBuilder.Entity<Favorite>().HasData(
                new Favorite
@@ -1330,8 +1330,8 @@ namespace eDentist.Services.Database
                 modelBuilder.Entity<Transactions>().HasData(
                     new Transactions
                     {
-                        TranskcijaId = i,  
-                        OrderHeaderId = i, 
+                        TranskcijaId = i,
+                        OrderHeaderId = i,
                         Amount = i * 10,
                         TransactionStatus = "Success",
                         TransId = "PAYID-MXPGHDI82U242769W004564J"
@@ -1354,8 +1354,8 @@ namespace eDentist.Services.Database
                     );
                 }
             }
+        }
+
 
         }
-    
-}
-}
+    }
