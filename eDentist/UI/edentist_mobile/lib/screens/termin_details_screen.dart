@@ -290,15 +290,15 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
       );
 
       try {
-        final insertedTermin = await AppointmentsProvider().insert(newTermin);
+        final insertedTermin =
+            await AppointmentsProvider().postAppointment(newTermin);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Termin "${insertedTermin.appointmentID}" uspješno dodan'),
+            content: Text('Termin uspješno dodan'),
             backgroundColor: Colors.green,
           ),
         );
-        Navigator.pop(context, insertedTermin);
+        Navigator.pop(context);
       } catch (e) {
         print(e);
       }
