@@ -8,6 +8,7 @@ import 'package:eprodaja_admin/providers/order_details_provider.dart';
 import 'package:eprodaja_admin/providers/orders_provider.dart';
 import 'package:eprodaja_admin/providers/product_provider.dart';
 import 'package:eprodaja_admin/providers/product_type_provider.dart';
+import 'package:eprodaja_admin/providers/recommendResult_provider.dart';
 import 'package:eprodaja_admin/providers/transakcije_provider.dart';
 import 'package:eprodaja_admin/providers/user_provider.dart';
 import 'package:eprodaja_admin/screens/dental_service_page.dart';
@@ -69,6 +70,7 @@ class MyMaterialApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => OrderDetailsState()),
         ChangeNotifierProvider(create: (_) => TransactionsProvider()),
         ChangeNotifierProvider(create: (_) => CityProvider()),
+        ChangeNotifierProvider(create: (_) => RecommendResultProvider()),
       ],
       child: MaterialApp(
         title: 'RS II Material app',

@@ -201,30 +201,23 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
   }
 
   pw.Widget _generatePDFContent() {
-    if (transakcije != [] && transakcije.length > 0) {
-      return pw.Column(
-        children: transakcije!.map((t) {
-          return pw.Container(
-            padding: pw.EdgeInsets.symmetric(vertical: 8.0),
-            child: pw.Column(
-              children: [
-                pw.Row(
-                  children: [
-                    pw.Text('Narudzba: ${t.orderHeaderId}'),
-                  ],
-                ),
-                pw.Row(
-                  children: [
-                    pw.Text('Iznos transakcije  ${t.amount}'),
-                  ],
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      );
-    } else {
-      return pw.Text('Nema podataka o transakcijama.');
-    }
+    return pw.Column(
+      children: transakcije
+          .map((e) => pw.Column(
+                children: [
+                  pw.Row(
+                    children: [
+                      pw.Text('Narudzba: ${e.orderHeaderId}'),
+                    ],
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text('Iznos transakcije: ${e.amount}'),
+                    ],
+                  ),
+                ],
+              ))
+          .toList(),
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:eprodaja_admin/models/product.dart';
 import 'package:eprodaja_admin/models/search_result.dart';
 import 'package:eprodaja_admin/providers/product_provider.dart';
+import 'package:eprodaja_admin/providers/recommendResult_provider.dart';
 import 'package:eprodaja_admin/screens/product_detail_screen.dart';
 import 'package:eprodaja_admin/utils/util.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class ProductsPage extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductsPage> {
   late ProductProvider _productProvider;
+  late RecommendResultProvider _recommendResultProvider;
   SearchResult<Product>? result;
   bool isLoading = true;
   String searchText = "";
@@ -26,6 +28,8 @@ class _ProductListScreenState extends State<ProductsPage> {
   void initState() {
     super.initState();
     _productProvider = Provider.of<ProductProvider>(context, listen: false);
+    _recommendResultProvider =
+        Provider.of<RecommendResultProvider>(context, listen: false);
     _fetchProducts();
     isSortAscending = true;
   }
@@ -68,6 +72,52 @@ class _ProductListScreenState extends State<ProductsPage> {
           SizedBox(height: 16),
           _buildSearchInput(),
           _buildSortDropdown(),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            onPressed: () async {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      "Molimo ne izlazite sa stranice dok se ne izvrsi treniranje modela"),
+                  duration: Duration(seconds: 5),
+                ),
+              );
+
+              try {
+                await _recommendResultProvider.trainData();
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Model je uspješno treniran."),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              } catch (e) {
+                String errorMessage =
+                    'Došlo je do pogreške prilikom treniranja modela.';
+
+                if (e is Exception && e.toString().isNotEmpty) {
+                  final regex = RegExp(r'status code: (.+)$');
+                  final match = regex.firstMatch(e.toString());
+
+                  if (match != null) {
+                    errorMessage = match.group(1)!;
+                  }
+                }
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(errorMessage),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              }
+            },
+            child: Text(
+              "Train Data",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
           Expanded(
             child: _buildProductList(),
           ),

@@ -86,7 +86,7 @@ flutter:
   fonts:
     - family: SansSerif
       fonts:
-        - asset: assets/fonts/OpenSans.ttf
+        - asset: fonts/OpenSans.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

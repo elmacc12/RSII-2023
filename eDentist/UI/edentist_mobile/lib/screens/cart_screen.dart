@@ -109,66 +109,77 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildBuyButton() {
-    return Row(children: [
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.black,
-            ),
-            onPressed: _cartProvider.cart.items.isEmpty
-                ? null
-                : () async {
-                    List<Map<String, dynamic>> items = [];
-
-                    for (var item in _cartProvider.cart.items) {
-                      items.add(
-                        {
-                          "proizvodID": item.product.productId,
-                          "kolicina": item.count,
-                        },
-                      );
-                    }
-                    int patientId = await getPatientId();
-
-                    Map<String, dynamic> order = {
-                      "orderDate": DateTime.now().toIso8601String(),
-                      "userId": await getPatientId(),
-                      "totalPrice": total.toInt(),
-                    };
-
-                    var response = await _orderProvider.insert(order);
-
-                    for (var item in _cartProvider.cart.items) {
-                      Map<String, dynamic> orderProduct = {
-                        "orderHeaderId": response.orderHeaderId,
-                        "productId": item.product.productId,
-                        "quantity": item.count,
-                      };
-                      var result =
-                          await _orderDetailsProvider.insert(orderProduct);
-                    }
-
-                    setState(() {});
-
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => PaypalScreen(
-                          items: items,
-                          userId: patientId,
-                          narudzbaId: response?.orderHeaderId,
-                          iznos: response?.totalPrice,
-                        ),
-                      ),
-                    );
-                  },
-            child: const Text("Kupi!"),
-          ),
+    return Column(
+      children: [
+        Text(
+          'Ukupno: ${total.toStringAsFixed(2)}', // Assuming total is a double
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-      ),
-    ]);
+        SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.black,
+                  ),
+                  onPressed: _cartProvider.cart.items.isEmpty
+                      ? null
+                      : () async {
+                          List<Map<String, dynamic>> items = [];
+
+                          for (var item in _cartProvider.cart.items) {
+                            items.add(
+                              {
+                                "proizvodID": item.product.productId,
+                                "kolicina": item.count,
+                              },
+                            );
+                          }
+                          int patientId = await getPatientId();
+
+                          Map<String, dynamic> order = {
+                            "orderDate": DateTime.now().toIso8601String(),
+                            "userId": await getPatientId(),
+                            "totalPrice": total.toInt(),
+                          };
+
+                          var response = await _orderProvider.insert(order);
+
+                          for (var item in _cartProvider.cart.items) {
+                            Map<String, dynamic> orderProduct = {
+                              "orderHeaderId": response.orderHeaderId,
+                              "productId": item.product.productId,
+                              "quantity": item.count,
+                            };
+                            var result = await _orderDetailsProvider
+                                .insert(orderProduct);
+                          }
+
+                          setState(() {});
+
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => PaypalScreen(
+                                items: items,
+                                userId: patientId,
+                                narudzbaId: response?.orderHeaderId,
+                                iznos: response?.totalPrice,
+                              ),
+                            ),
+                          );
+                        },
+                  child: const Text("Kupi!"),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   Future<int> getPatientId() async {
