@@ -12,6 +12,7 @@ import 'package:eprodaja_admin/providers/recommendResult_provider.dart';
 import 'package:eprodaja_admin/providers/transakcije_provider.dart';
 import 'package:eprodaja_admin/providers/user_provider.dart';
 import 'package:eprodaja_admin/screens/dental_service_page.dart';
+import 'package:eprodaja_admin/screens/signup_page.dart';
 
 import './screens/termini_page.dart';
 import 'package:flutter/material.dart';

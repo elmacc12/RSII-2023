@@ -92,78 +92,45 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      (widget.user.slika == "" ||
-                              widget.user.slika == "0x" ||
-                              widget.user.slika == null)
-                          ? Icon(Icons.image, size: 250)
-                          : Container(
-                              width: 250,
-                              height: 250,
-                              child: imageFromBase64String(widget.user.slika!),
-                            ),
-                      Text('Ime: ${widget.user.name}'),
-                      Text('Prezime: ${widget.user.surname}'),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      DataTable(
-                        columns: [
-                          DataColumn(label: Text('Naziv dijagnoze')),
-                          DataColumn(label: Text('Datum')),
-                          DataColumn(label: Text('Mišljenje doktora')),
-                        ],
-                        rows: medicalCards
-                            .where((mc) => mc.userId == widget.user.userId)
-                            .map((medicalCard) {
-                          DentalService? matchingService =
-                              dentalServices.firstWhereOrNull((service) =>
-                                  service.dentalServiceId ==
-                                  medicalCard.dentalServiceId);
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                  Text(matchingService?.serviceName ?? "")),
-                              DataCell(Text(
-                                  medicalCard.datumDijagnoze.toString() ?? "")),
-                              DataCell(Text(medicalCard.doctorsOppinion ?? "")),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                      SizedBox(height: 16),
-                      BlueButton(
-                        text: 'Dodaj dijagnozu',
-                        width: 200,
-                        height: 40,
-                        onPressed: () {
-                          _showAddDiagnoseDialog();
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      BlueButton(
-                        text: 'Kreiraj izvještaj',
-                        width: 200,
-                        height: 40,
-                        onPressed: () async {
-                          final pdf = await _generatePDFReport();
-                          await _printPDFReport(pdf);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+            DataTable(
+              columns: [
+                DataColumn(label: Text('Naziv dijagnoze')),
+                DataColumn(label: Text('Datum')),
+                DataColumn(label: Text('Mišljenje doktora')),
               ],
+              rows: medicalCards
+                  .where((mc) => mc.userId == widget.user.userId)
+                  .map((medicalCard) {
+                DentalService? matchingService =
+                    dentalServices.firstWhereOrNull((service) =>
+                        service.dentalServiceId == medicalCard.dentalServiceId);
+                return DataRow(
+                  cells: [
+                    DataCell(Text(matchingService?.serviceName ?? "")),
+                    DataCell(Text(medicalCard.datumDijagnoze.toString() ?? "")),
+                    DataCell(Text(medicalCard.doctorsOppinion ?? "")),
+                  ],
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 16),
+            BlueButton(
+              text: 'Dodaj dijagnozu',
+              width: 200,
+              height: 40,
+              onPressed: () {
+                _showAddDiagnoseDialog();
+              },
+            ),
+            SizedBox(height: 20),
+            BlueButton(
+              text: 'Kreiraj izvještaj',
+              width: 200,
+              height: 40,
+              onPressed: () async {
+                final pdf = await _generatePDFReport();
+                await _printPDFReport(pdf);
+              },
             ),
           ],
         ),

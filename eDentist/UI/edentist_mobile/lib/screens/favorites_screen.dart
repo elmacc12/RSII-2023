@@ -1,3 +1,6 @@
+import 'package:edentist_mobile/screens/product_details_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:edentist_mobile/models/favorite.dart';
 import 'package:edentist_mobile/models/product.dart';
 import 'package:edentist_mobile/providers/favorites_provider.dart';
@@ -5,8 +8,6 @@ import 'package:edentist_mobile/providers/product_provider.dart';
 import 'package:edentist_mobile/providers/user_provider.dart';
 import 'package:edentist_mobile/utils/util.dart';
 import 'package:edentist_mobile/widgets/master_screen_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({Key? key}) : super(key: key);
@@ -63,30 +64,33 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         itemCount: favoriteProducts.length,
         itemBuilder: (context, index) {
           final favorite = favoriteProducts[index];
-          return ListTile(
-            leading: Container(
-              width: 100,
-              height: 100,
-              child: FutureBuilder<Product?>(
-                future: _productProvider.getById(favorite.productId!),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error');
-                  } else if (!snapshot.hasData || snapshot.data == null) {
-                    return Text('Proizvod nije pronadjen.');
-                  } else {
-                    final product = snapshot.data!;
+          return GestureDetector(
+            onTap: () => _openProductDetailScreen(favorite.productId),
+            child: ListTile(
+              leading: Container(
+                width: 100,
+                height: 100,
+                child: FutureBuilder<Product?>(
+                  future: _productProvider.getById(favorite.productId!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error');
+                    } else if (!snapshot.hasData || snapshot.data == null) {
+                      return Text('Proizvod nije pronadjen.');
+                    } else {
+                      final product = snapshot.data!;
 
-                    return imageFromBase64String(product.slika!);
-                  }
-                },
+                      return imageFromBase64String(product.slika!);
+                    }
+                  },
+                ),
               ),
-            ),
-            trailing: IconButton(
-              icon: Icon(Icons.favorite),
-              onPressed: () => _deleteFavorite(favorite.favoriteId),
+              trailing: IconButton(
+                icon: Icon(Icons.favorite),
+                onPressed: () => _deleteFavorite(favorite.favoriteId),
+              ),
             ),
           );
         },
@@ -94,12 +98,27 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
+  _openProductDetailScreen(int productId) async {
+    Product? product = await _productProvider.getById(productId);
+    if (product != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ProductDetailsScreen(product),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Product not found.")),
+      );
+    }
+  }
+
   _deleteFavorite(int? omiljeniProizvodId) async {
     try {
       await _favoritesProvider.delete(omiljeniProizvodId);
       _fetchFavorites();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Product successfully removed from favorites.")),
+        SnackBar(content: Text("Proizvod uspješno uklonjen iz omiljenih.")),
       );
     } catch (e) {}
   }

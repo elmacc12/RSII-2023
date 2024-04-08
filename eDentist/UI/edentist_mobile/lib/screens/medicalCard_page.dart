@@ -65,10 +65,7 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Pregled kartona za pacijenta ' +
-              widget.user.name.toString() +
-              ' ' +
-              widget.user.surname.toString(),
+          'Pregled kartona ',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue,
@@ -77,7 +74,7 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildUserImage(),
+            // _buildUserImage(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: medicalCards
@@ -107,29 +104,29 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
     );
   }
 
-  Widget _buildUserImage() {
-    if (widget.user.slika == null ||
-        widget.user.slika == "0x" ||
-        widget.user.slika == "") {
-      return Container(
-        height: 120,
-        width: 120,
-        color: Colors.grey,
-        margin: EdgeInsets.all(16),
-        child: Text("No image",
-            style: TextStyle(
-                color: Colors.white, // Set text color to white
-                fontWeight: FontWeight.bold)),
-      );
-    } else {
-      return Container(
-        height: 120,
-        width: 120,
-        margin: EdgeInsets.all(16),
-        child: imageFromBase64String(widget.user.slika ?? ""),
-      );
-    }
-  }
+  // Widget _buildUserImage() {
+  //   if (widget.user.slika == null ||
+  //       widget.user.slika == "0x" ||
+  //       widget.user.slika == "") {
+  //     return Container(
+  //       height: 120,
+  //       width: 120,
+  //       color: Colors.grey,
+  //       margin: EdgeInsets.all(16),
+  //       child: Text("No image",
+  //           style: TextStyle(
+  //               color: Colors.white, // Set text color to white
+  //               fontWeight: FontWeight.bold)),
+  //     );
+  //   } else {
+  //     return Container(
+  //       height: 120,
+  //       width: 120,
+  //       margin: EdgeInsets.all(16),
+  //       child: imageFromBase64String(widget.user.slika ?? ""),
+  //     );
+  //   }
+  // }
 
   Widget _buildDiagnosis({
     required String serviceName,

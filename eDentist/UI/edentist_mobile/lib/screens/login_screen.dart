@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
                                 title: const Text("Error"),
-                                content: Text("err: $e"),
+                                content: Text("Netacan username ili password."),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(context),

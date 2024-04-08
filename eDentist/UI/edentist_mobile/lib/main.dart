@@ -54,7 +54,7 @@ class MyMaterialApp extends StatelessWidget {
       child: MaterialApp(
         title: 'RS II Material app',
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: const LoginPage(),
+        home: LoginPage(),
       ),
     );
   }
