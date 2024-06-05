@@ -9,6 +9,7 @@ namespace eDentist.Model
 {
     public class UserModel
     {
+        //komentar
         public int UserId { get; set; }
 
         public int? RoleID { get; set; }
