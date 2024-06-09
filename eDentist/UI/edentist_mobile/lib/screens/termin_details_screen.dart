@@ -11,9 +11,10 @@ import 'package:provider/provider.dart';
 
 class AddAppointmentPage extends StatefulWidget {
   final Appointment? termin;
+  final int? doctorId;
   final int? selectedPatient;
 
-  AddAppointmentPage({this.termin, this.selectedPatient});
+  AddAppointmentPage({this.termin, this.doctorId, this.selectedPatient});
 
   @override
   _AddAppointmentPageState createState() => _AddAppointmentPageState();
@@ -40,11 +41,11 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     super.initState();
     _korisniciProvider = Provider.of<UserProvider>(context, listen: false);
     _terminiProvider = AppointmentsProvider();
-    _uredjenDatum = widget.termin?.datum ?? DateTime.now();
+    _uredjenDatum = widget.termin?.datum ?? DateTime.now().add(Duration(days: 3));;
     _pacijentId = widget.selectedPatient ?? null;
     _generateSelectableTimes();
     _fetchPacijenti();
-    _fetchTerminiForPatient(_selectedPatient ?? _pacijentId ?? -1);
+    _fetchTerminiForDoctor(_selectedPatient ?? _pacijentId ?? -1);
   }
 
   void _generateSelectableTimes() {
@@ -95,13 +96,11 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     }
   }
 
-  Future<void> _fetchTerminiForPatient(int patientId) async {
+  Future<void> _fetchTerminiForDoctor(int patientId) async {
     try {
-      var terminiData = await _terminiProvider.get(filter: {
-        'korisnikIdPacijent': patientId,
-      });
+      var terminiData = await _terminiProvider.get();
       setState(() {
-        _termini = terminiData.result;
+        _termini = terminiData.result.where((t) => t.userIdDentist==widget.doctorId).toList();
       });
     } catch (e) {
       print(e);
@@ -121,7 +120,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 16.0),
             SizedBox(height: 20),
             Text(
               'Datum:',
@@ -135,10 +133,12 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
             SizedBox(height: 8),
             ElevatedButton(
               onPressed: () async {
+                var todayDate = DateTime.now();
+                var firstDate = todayDate.add(Duration(days: 3));
                 final selectedDate = await showDatePicker(
                   context: context,
                   initialDate: _uredjenDatum,
-                  firstDate: DateTime(2000),
+                  firstDate: firstDate,
                   lastDate: DateTime(2101),
                 );
 
@@ -224,7 +224,13 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TerminiPage(),
+          ),
+        );
                 },
                 child: Text('OK'),
               ),
@@ -246,7 +252,13 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
             backgroundColor: Colors.green,
           ),
         );
-        Navigator.pop(context, widget.termin);
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TerminiPage(),
+          ),
+        );
       } catch (e) {
         print(e.toString());
       }
@@ -264,7 +276,13 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                 Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TerminiPage(),
+          ),
+        );
                 },
                 child: Text('OK'),
               ),
@@ -288,6 +306,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         ),
         "",
         false,
+        widget.doctorId
       );
 
       try {

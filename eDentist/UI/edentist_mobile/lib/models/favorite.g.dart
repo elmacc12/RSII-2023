@@ -7,9 +7,9 @@ part of 'favorite.dart';
 // **************************************************************************
 
 Favorite _$FavoriteFromJson(Map<String, dynamic> json) => Favorite(
-      json['favoriteId'] as int,
-      json['userId'] as int,
-      json['productId'] as int,
+      (json['favoriteId'] as num).toInt(),
+      (json['userId'] as num).toInt(),
+      (json['productId'] as num).toInt(),
     );
 
 Map<String, dynamic> _$FavoriteToJson(Favorite instance) => <String, dynamic>{

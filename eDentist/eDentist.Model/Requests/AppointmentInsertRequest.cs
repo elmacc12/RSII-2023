@@ -12,5 +12,6 @@ namespace eDentist.Model.Requests
         public DateTime Datum { get; set; }
         public string Vrijeme { get; set; }
         public bool TerminZatvoren { get; set; }
+        public int? UserIdDentist { get; set; }
     }
 }

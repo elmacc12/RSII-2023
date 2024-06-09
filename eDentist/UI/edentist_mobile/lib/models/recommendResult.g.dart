@@ -8,11 +8,11 @@ part of 'recommendResult.dart';
 
 RecommendResult _$RecommendResultFromJson(Map<String, dynamic> json) =>
     RecommendResult(
-      json['id'] as int,
-      json['proizvodId'] as int?,
-      json['drugiProizvodId'] as int?,
-      json['treciProizvodId'] as int?,
-    )..prviProizvodId = json['prviProizvodId'] as int?;
+      (json['id'] as num).toInt(),
+      (json['proizvodId'] as num?)?.toInt(),
+      (json['drugiProizvodId'] as num?)?.toInt(),
+      (json['treciProizvodId'] as num?)?.toInt(),
+    )..prviProizvodId = (json['prviProizvodId'] as num?)?.toInt();
 
 Map<String, dynamic> _$RecommendResultToJson(RecommendResult instance) =>
     <String, dynamic>{

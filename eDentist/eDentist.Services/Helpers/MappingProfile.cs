@@ -57,6 +57,10 @@ namespace eDentist.Services.Helpers
             CreateMap<TransactionUpsertRequest,Transactions>();
             CreateMap<BlogPost, BlogPostModel>();
             CreateMap<BlogPostUpsertRequest, BlogPost>();
+            CreateMap<TransakcijaZaUslugu, TransakcijaZaUsluguModel>();
+            CreateMap<TransakcijaZaUsluguUpsertRequest, TransakcijaZaUslugu>();
+            CreateMap<Comment,CommentModel>();
+            CreateMap<CommentUpsertRequest,Comment>();
         }
     }
 }

@@ -7,7 +7,7 @@ part of 'blog_post.dart';
 // **************************************************************************
 
 BlogPost _$BlogPostFromJson(Map<String, dynamic> json) => BlogPost(
-      json['blogId'] as int,
+      (json['blogId'] as num).toInt(),
       json['headline'] as String?,
       json['content'] as String?,
       json['slika'] as String?,

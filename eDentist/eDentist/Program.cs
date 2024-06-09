@@ -1,9 +1,5 @@
 using eDentist;
-using eDentist.Filters;
-using eDentist.Model.Models;
 using eDentist.Model.Requests;
-using eDentist.Model.SearchObjects;
-using eDentist.Services;
 using eDentist.Services.Database;
 using eDentist.Services.Interfaces;
 using eDentist.Services.ProizvodiStateMachine;
@@ -38,6 +34,8 @@ builder.Services.AddTransient<IFavoriteService, FavoriteService>();
 builder.Services.AddTransient<IRecommendResultService, RecommendResultService>();
 builder.Services.AddTransient<IBlogPostService, BlogPostService>();
 builder.Services.AddTransient<ITransactionService, TransactionService>();
+builder.Services.AddTransient<ITransakcijaZaUsluguService,TransakcijaZaUsluguService>();
+builder.Services.AddTransient<ICommentService, CommentService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

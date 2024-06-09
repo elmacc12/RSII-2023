@@ -1,10 +1,6 @@
 import 'package:edentist_mobile/models/appointment.dart';
-import 'package:edentist_mobile/models/search_result.dart';
-import 'package:edentist_mobile/models/user.dart';
 import 'package:edentist_mobile/providers/appointment_provider.dart';
-import 'package:edentist_mobile/providers/user_provider.dart';
-import 'package:edentist_mobile/screens/termin_details_screen.dart';
-import 'package:edentist_mobile/utils/util.dart';
+import 'package:edentist_mobile/screens/choose_doctor_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -18,41 +14,22 @@ class TerminiPage extends StatefulWidget {
 
 class _TerminiPageState extends State<TerminiPage> {
   final AppointmentsProvider _terminiProvider = AppointmentsProvider();
-  late UserProvider _korisniciProvider;
-  List<User>? result;
   List<Appointment> _termin = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _korisniciProvider = Provider.of<UserProvider>(context, listen: false);
     _fetchData();
   }
 
   Future<void> _fetchData() async {
     try {
-      var userData = await _korisniciProvider.get();
+      var appointmentsData = await _terminiProvider.get();
       setState(() {
-        result = userData.result;
+        _termin = appointmentsData.result;
+        isLoading = false;
       });
-
-      final pacijent = result?.firstWhere(
-          (korisnik) => korisnik.username == Authorization.username);
-
-      if (pacijent!.userId != null) {
-        var appointmentsData = await _terminiProvider.get();
-        setState(() {
-          _termin = appointmentsData.result
-              .where((termin) => termin.userId == pacijent.userId)
-              .toList();
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-      }
     } catch (e) {
       print(e);
       setState(() {
@@ -73,11 +50,10 @@ class _TerminiPageState extends State<TerminiPage> {
           SizedBox(height: 16),
           ElevatedButton(
             onPressed: () async {
-              _navigateToTerminDetailScreen(null, null);
+              _navigateToTerminDetailScreen(null);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
-              // onPrimary: Colors.white,
             ),
             child: SizedBox(
               width: double.infinity,
@@ -93,9 +69,9 @@ class _TerminiPageState extends State<TerminiPage> {
           ),
           SizedBox(height: 16),
           Expanded(
-            child: SingleChildScrollView(
-              child: Center(child: _buildDataListView()),
-            ),
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : _buildDataListView(),
           ),
         ],
       ),
@@ -103,75 +79,54 @@ class _TerminiPageState extends State<TerminiPage> {
   }
 
   Widget _buildDataListView() {
-    if (isLoading) {
-      return CircularProgressIndicator();
-    }
-
     if (_termin.isEmpty) {
-      return Text('Nema zakazanih termina');
+      return Center(child: Text('Nema zakazanih termina'));
     }
 
-    return Container(
-      width: double.infinity,
-      child: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: [
-              DataColumn(label: Text('Datum')),
-              DataColumn(label: Text('Vrijeme')),
-              DataColumn(label: Text('Otkaži')),
-              DataColumn(label: Text('Uredi')),
-            ],
-            rows: _termin.map((termin) {
-              return DataRow(
-                cells: [
-                  DataCell(Text(
-                      DateFormat('dd.MM.yyyy - HH:mm').format(termin.datum))),
-                  DataCell(Text(DateFormat('HH:mm').format(termin.datum))),
-                  DataCell(
-                    ElevatedButton(
+    return ListView.builder(
+      itemCount: _termin.length,
+      itemBuilder: (context, index) {
+        final termin = _termin[index];
+        final now = DateTime.now();
+        final isPast = termin.datum.isBefore(now);
+
+        return ListTile(
+          title: Text(DateFormat('dd.MM.yyyy - HH:mm').format(termin.datum)),
+          subtitle: Text('Vrijeme: ${DateFormat('HH:mm').format(termin.datum)}'),
+          trailing: isPast
+              ? Text('Zatvoren', style: TextStyle(color: Colors.red))
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
                       onPressed: () {
                         _showDeleteConfirmationDialog(termin);
                       },
-                      style:
-                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                      child:
-                          Text('Otkaži', style: TextStyle(color: Colors.white)),
+                      icon: Icon(Icons.cancel, color: Colors.red),
                     ),
-                  ),
-                  DataCell(
-                    ElevatedButton(
+                    IconButton(
                       onPressed: () {
-                        _navigateToTerminDetailScreen(termin, termin.userId);
+                        _navigateToTerminDetailScreen(termin);
                       },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue),
-                      child:
-                          Text('Uredi', style: TextStyle(color: Colors.white)),
+                      icon: Icon(Icons.edit, color: Colors.blue),
                     ),
-                  ),
-                ],
-              );
-            }).toList(),
-          ),
-        ),
-      ),
+                  ],
+                ),
+        );
+      },
     );
   }
 
-  void _navigateToTerminDetailScreen(
-      Appointment? termin, int? selectedPatient) async {
+  void _navigateToTerminDetailScreen(Appointment? termin) async {
     final modifiedTermin = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => AddAppointmentPage(termin: termin),
+        builder: (context) => ChooseDoctorScreen(termin: termin),
       ),
     );
 
     if (modifiedTermin != null && modifiedTermin is Appointment) {
       setState(() {
-        int index = _termin.indexWhere(
-            (element) => element.appointmentID == modifiedTermin.appointmentID);
+        int index = _termin.indexWhere((element) => element.appointmentID == modifiedTermin.appointmentID);
         if (index != -1) {
           _termin[index] = modifiedTermin;
         } else {
@@ -212,8 +167,7 @@ class _TerminiPageState extends State<TerminiPage> {
     try {
       await _terminiProvider.delete(termin.appointmentID);
       setState(() {
-        _termin
-            .removeWhere((item) => item.appointmentID == termin.appointmentID);
+        _termin.removeWhere((item) => item.appointmentID == termin.appointmentID);
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -12,6 +12,7 @@ Appointment _$AppointmentFromJson(Map<String, dynamic> json) => Appointment(
       DateTime.parse(json['datum'] as String),
       json['vrijeme'] as String?,
       json['terminZatvoren'] as bool,
+      json['userIdDentist'] as int?,
     );
 
 Map<String, dynamic> _$AppointmentToJson(Appointment instance) =>
@@ -21,4 +22,5 @@ Map<String, dynamic> _$AppointmentToJson(Appointment instance) =>
       'datum': instance.datum.toIso8601String(),
       'vrijeme': instance.vrijeme,
       'terminZatvoren': instance.terminZatvoren,
+      'userIdDentist': instance.userIdDentist,
     };

@@ -7,8 +7,8 @@ using Microsoft.ML.Trainers;
 using Microsoft.ML;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using eDentist.Model.Models;
 using eDentist.Services.Database;
@@ -18,64 +18,47 @@ namespace eDentist.Services.Services
 {
     public class RecommendResultService : BaseCrudService<RecommendResultModel, RecommendResult, BaseSearchObject, RecommendResultUpsertRequest, RecommendResultUpsertRequest>, IRecommendResultService
     {
+        private const string ModelPath = "MLModels/RecommendationModel.zip";
+
         public RecommendResultService(EDentistDbContext context, IMapper mapper)
-          : base(context, mapper)
+            : base(context, mapper)
         {
         }
 
-        static MLContext mlContext = null;
-        static object isLocked = new object();
-        static ITransformer modeltr = null;
+        private static MLContext mlContext = null;
+        private static object isLocked = new object();
+        private static ITransformer modeltr = null;
 
-
-
-        public List<ProductModel> Recommend(int? id)
+        private void EnsureMLContext()
         {
             lock (isLocked)
             {
                 if (mlContext == null)
                 {
                     mlContext = new MLContext();
+                }
+            }
+        }
 
-                    var tmpData = _context.OrderHeaders.Include("OrderOrderHeaders").ToList();
+        public List<ProductModel> Recommend(int? id)
+        {
+            EnsureMLContext();
 
-                    var data = new List<RatingEntry>();
-
-                    foreach (var x in tmpData)
+            lock (isLocked)
+            {
+                if (modeltr == null)
+                {
+                    if (File.Exists(ModelPath))
                     {
-                        if (x.OrderOrderHeaders.Count > 1)
+                        using (var fileStream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                         {
-                            var distinctItemId = x.OrderOrderHeaders.Select(y => y.ProductId).ToList();
-
-                            distinctItemId.ForEach(y =>
-                            {
-                                var relatedItems = x.OrderOrderHeaders.Where(z => z.ProductId != y).ToList();
-
-                                foreach (var z in relatedItems)
-                                {
-                                    data.Add(new RatingEntry()
-                                    {
-                                        RatingId = (uint)y,
-                                        CoRatingId = (uint)z.ProductId,
-                                    });
-                                }
-                            });
+                            modeltr = mlContext.Model.Load(fileStream, out _);
                         }
                     }
-                    var traindata = mlContext.Data.LoadFromEnumerable(data);
-                    MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
-                    options.MatrixColumnIndexColumnName = nameof(RatingEntry.RatingId);
-                    options.MatrixRowIndexColumnName = nameof(RatingEntry.CoRatingId);
-                    options.LabelColumnName = "Label";
-                    options.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
-                    options.Alpha = 0.01;
-                    options.Lambda = 0.025;
-                    options.NumberOfIterations = 100;
-                    options.C = 0.00001;
-
-                    var est = mlContext.Recommendation().Trainers.MatrixFactorization(options);
-
-                    modeltr = est.Fit(traindata);
+                    else
+                    {
+                        TrainAndSaveModel();
+                    }
                 }
             }
 
@@ -84,7 +67,7 @@ namespace eDentist.Services.Services
 
             foreach (var item in allItems)
             {
-                var predictionEngine = mlContext.Model.CreatePredictionEngine<RatingEntry, Copurchase_prediction>(modeltr);
+                var predictionEngine = mlContext.Model.CreatePredictionEngine<RatingEntry, CopurchasePrediction>(modeltr);
                 var prediction = predictionEngine.Predict(new RatingEntry()
                 {
                     RatingId = (uint)id,
@@ -93,11 +76,67 @@ namespace eDentist.Services.Services
 
                 predictionResult.Add(new Tuple<Database.Product, float>(item, prediction.Score));
             }
+
             var finalResult = predictionResult.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(3).ToList();
 
             if (finalResult != null)
                 return _mapper.Map<List<ProductModel>>(finalResult);
             return null;
+        }
+
+        private void TrainAndSaveModel()
+        {
+            EnsureMLContext();
+
+            var tmpData = _context.OrderHeaders.Include("OrderOrderHeaders").ToList();
+
+            var data = new List<RatingEntry>();
+
+            foreach (var x in tmpData)
+            {
+                if (x.OrderOrderHeaders.Count > 1)
+                {
+                    var distinctItemId = x.OrderOrderHeaders.Select(y => y.ProductId).ToList();
+
+                    distinctItemId.ForEach(y =>
+                    {
+                        var relatedItems = x.OrderOrderHeaders.Where(z => z.ProductId != y).ToList();
+
+                        foreach (var z in relatedItems)
+                        {
+                            data.Add(new RatingEntry()
+                            {
+                                RatingId = (uint)y,
+                                CoRatingId = (uint)z.ProductId,
+                            });
+                        }
+                    });
+                }
+            }
+
+            var traindata = mlContext.Data.LoadFromEnumerable(data);
+            var options = new MatrixFactorizationTrainer.Options
+            {
+                MatrixColumnIndexColumnName = nameof(RatingEntry.RatingId),
+                MatrixRowIndexColumnName = nameof(RatingEntry.CoRatingId),
+                LabelColumnName = "Label",
+                LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass,
+                Alpha = 0.01,
+                Lambda = 0.025,
+                NumberOfIterations = 100,
+                C = 0.00001
+            };
+
+            var est = mlContext.Recommendation().Trainers.MatrixFactorization(options);
+
+            modeltr = est.Fit(traindata);
+
+            // Save the model
+            Directory.CreateDirectory(Path.GetDirectoryName(ModelPath)); // Ensure directory exists
+            using (var fileStream = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+            {
+                mlContext.Model.Save(modeltr, traindata.Schema, fileStream);
+            }
         }
 
         public class RatingEntry
@@ -107,9 +146,9 @@ namespace eDentist.Services.Services
             [KeyType(count: 262111)]
             public uint CoRatingId { get; set; }
             public float Label { get; set; }
-
         }
-        public class Copurchase_prediction
+
+        public class CopurchasePrediction
         {
             public float Score { get; set; }
         }
@@ -121,13 +160,13 @@ namespace eDentist.Services.Services
 
             if (proizvodi.Count > 4 && stavkeNarudzbe.Count() > 2)
             {
+                TrainAndSaveModel();
+
                 List<Database.RecommendResult> recommendList = new List<Database.RecommendResult>();
 
                 foreach (var proizvod in proizvodi)
                 {
-
                     var recommendedProducts = Recommend(proizvod.ProductId);
-
 
                     var resultRecommend = new Database.RecommendResult()
                     {
@@ -188,7 +227,7 @@ namespace eDentist.Services.Services
             }
             else
             {
-                throw new Exception("Not enough data to do recommmedation");
+                throw new Exception("Not enough data to do recommendation");
             }
         }
 
@@ -196,7 +235,5 @@ namespace eDentist.Services.Services
         {
             return _context.RecommendResult.ExecuteDeleteAsync();
         }
-
-
     }
 }

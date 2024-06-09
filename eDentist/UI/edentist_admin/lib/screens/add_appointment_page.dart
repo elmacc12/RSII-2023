@@ -31,6 +31,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   SearchResult<User>? result;
   List<Appointment>? _termini;
   int? _selectedPatient;
+  List<User>? _korisnici;
 
   bool get _isEditing => widget.termin != null;
 
@@ -39,12 +40,24 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     super.initState();
     _korisniciProvider = Provider.of<UserProvider>(context, listen: false);
     _terminiProvider = AppointmentsProvider();
-    _uredjenDatum = widget.termin?.datum ?? DateTime.now();
+    _uredjenDatum = widget.termin?.datum ?? DateTime.now().add(Duration(days: 3));
     _pacijentId = widget.selectedPatient ?? null;
     _generateSelectableTimes();
     _fetchPacijenti();
     _fetchTerminiForPatient(_selectedPatient ?? _pacijentId ?? -1);
   }
+Future<User?> _fetchDoctor() async {
+      var userData = await _korisniciProvider.get();
+      setState(() {
+        _korisnici = userData.result;
+      });
+
+      final doctor = _korisnici?.firstWhere(
+          (korisnik) => korisnik.username == Authorization.username);
+
+     return doctor;
+  }
+
 
   void _generateSelectableTimes() {
     final startTime = TimeOfDay(hour: 9, minute: 0);
@@ -161,10 +174,12 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
             SizedBox(height: 8),
             ElevatedButton(
               onPressed: () async {
+                var todayDate = DateTime.now();
+                var firstDate = todayDate.add(Duration(days: 3));
                 final selectedDate = await showDatePicker(
                   context: context,
                   initialDate: _uredjenDatum,
-                  firstDate: DateTime(2000),
+                  firstDate: firstDate,
                   lastDate: DateTime(2101),
                 );
 
@@ -305,12 +320,14 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         },
       );
     } else {
+      final doktor=await _fetchDoctor();
       final newTermin = Appointment(
         null,
         _selectedPatient,
         _uredjenDatum,
         "",
         false,
+        doktor!.userId
       );
 
       try {

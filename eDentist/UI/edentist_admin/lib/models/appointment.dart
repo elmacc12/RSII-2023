@@ -9,8 +9,9 @@ class Appointment {
   DateTime datum;
   String? vrijeme;
   bool terminZatvoren;
+  int? userIdDentist;
   Appointment(this.appointmentID, this.userId, this.datum, this.vrijeme,
-      this.terminZatvoren);
+      this.terminZatvoren, this.userIdDentist);
 
   factory Appointment.fromJson(Map<String, dynamic> json) =>
       _$AppointmentFromJson(json);

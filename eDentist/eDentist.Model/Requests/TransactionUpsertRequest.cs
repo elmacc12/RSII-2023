@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace eDentist.Model.Requests
+﻿namespace eDentist.Model.Requests
 {
     public class TransactionUpsertRequest
     {
@@ -16,5 +9,9 @@ namespace eDentist.Model.Requests
         public string? TransactionStatus { get; set; }
 
         public string? TransId { get; set; }
+
+        public int? UserId { get; set; }
+
+        public DateTime? Datum { get; set; }
     }
 }

@@ -19,15 +19,25 @@ class MedicalCardPage extends StatefulWidget {
 class _MedicalCardPageState extends State<MedicalCardPage> {
   final MedicalCardProvider _medicalCardProvider = MedicalCardProvider();
   final DentalServiceProvider _dentalServiceProvider = DentalServiceProvider();
+  final TextEditingController _searchController = TextEditingController();
   List<MedicalCard> medicalCards = [];
   List<DentalService> dentalServices = [];
+  List<MedicalCard> filteredMedicalCards = [];
   bool isLoading = true;
+  String searchQuery = "";
 
   @override
   void initState() {
     super.initState();
     fetchMedicalRecords();
     fetchDentalServices();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchMedicalRecords() async {
@@ -35,6 +45,7 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
       var result = await _medicalCardProvider.get();
       setState(() {
         medicalCards = result.result;
+        filteredMedicalCards = medicalCards;
         isLoading = false;
       });
     } catch (e) {
@@ -60,73 +71,71 @@ class _MedicalCardPageState extends State<MedicalCardPage> {
     }
   }
 
+  void _onSearchChanged() {
+    setState(() {
+      searchQuery = _searchController.text.toLowerCase();
+      filteredMedicalCards = medicalCards.where((medicalCard) {
+        DentalService? matchingService = dentalServices.firstWhereOrNull(
+            (service) => service.dentalServiceId == medicalCard.dentalServiceId);
+        return matchingService?.serviceName?.toLowerCase().contains(searchQuery) ?? false;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Pregled kartona ',
+          'Pregled kartona',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // _buildUserImage(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: medicalCards
-                          .where((mc) => mc.userId == widget.user.userId)
-                          .length >
-                      0
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: medicalCards
-                          .where((mc) => mc.userId == widget.user.userId)
-                          .map((medicalCard) {
-                        DentalService? matchingService =
-                            dentalServices.firstWhereOrNull((service) =>
-                                service.dentalServiceId ==
-                                medicalCard.dentalServiceId);
-                        return _buildDiagnosis(
-                          serviceName: matchingService?.serviceName ?? "",
-                          date: medicalCard.datumDijagnoze.toString() ?? "",
-                          doctorsOpinion: medicalCard.doctorsOppinion ?? "",
-                        );
-                      }).toList())
-                  : Text("Nema dostupnih dijagnoza."),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        labelText: 'Pretraži po nazivu dijagnoze',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: filteredMedicalCards
+                                .where((mc) => mc.userId == widget.user.userId)
+                                .isNotEmpty
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: filteredMedicalCards
+                                .where((mc) => mc.userId == widget.user.userId)
+                                .map((medicalCard) {
+                              DentalService? matchingService =
+                                  dentalServices.firstWhereOrNull((service) =>
+                                      service.dentalServiceId ==
+                                      medicalCard.dentalServiceId);
+                              return _buildDiagnosis(
+                                serviceName: matchingService?.serviceName ?? "",
+                                date: medicalCard.datumDijagnoze.toString() ?? "",
+                                doctorsOpinion: medicalCard.doctorsOppinion ?? "",
+                              );
+                            }).toList())
+                        : Text("Nema dostupnih dijagnoza."),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
-
-  // Widget _buildUserImage() {
-  //   if (widget.user.slika == null ||
-  //       widget.user.slika == "0x" ||
-  //       widget.user.slika == "") {
-  //     return Container(
-  //       height: 120,
-  //       width: 120,
-  //       color: Colors.grey,
-  //       margin: EdgeInsets.all(16),
-  //       child: Text("No image",
-  //           style: TextStyle(
-  //               color: Colors.white, // Set text color to white
-  //               fontWeight: FontWeight.bold)),
-  //     );
-  //   } else {
-  //     return Container(
-  //       height: 120,
-  //       width: 120,
-  //       margin: EdgeInsets.all(16),
-  //       child: imageFromBase64String(widget.user.slika ?? ""),
-  //     );
-  //   }
-  // }
 
   Widget _buildDiagnosis({
     required String serviceName,

@@ -18,5 +18,8 @@ namespace eDentist.Model.Models
         public string? TransactionStatus { get; set; }
 
         public string? TransId { get; set; }
+        public int? UserId { get; set; }
+
+        public DateTime? Datum { get; set; }
     }
 }

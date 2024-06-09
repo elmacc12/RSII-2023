@@ -9,8 +9,6 @@ namespace eDentist.Services.Database
 {
     public partial class EDentistDbContext
     {
-
-
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Roles>().HasData(
@@ -142,7 +140,8 @@ namespace eDentist.Services.Database
                     UserId = 2,
                     Datum = DateTime.Now,
                     Vrijeme = "10:00 AM",
-                    TerminZatvoren = false
+                    TerminZatvoren = false,
+                    UserIdDentist = 1
                 }
             );
 
@@ -394,7 +393,9 @@ namespace eDentist.Services.Database
                         OrderHeaderId = i,
                         Amount = i * 10,
                         TransactionStatus = "Success",
-                        TransId = "PAYID-MXPGHDI82U242769W004564J"
+                        TransId = "PAYID-MXPGHDI82U242769W004564J",
+                        UserId = 2,
+                        Datum = DateTime.Now
                     }
                 );
 
@@ -414,8 +415,21 @@ namespace eDentist.Services.Database
                     );
                 }
             }
-        }
 
+            modelBuilder.Entity<TransakcijaZaUslugu>().HasData(
+                    new TransakcijaZaUslugu
+                    {
+                        TranskcijaId = 1,
+                        DentalServiceId = 1,
+                        Amount = 50,
+                        TransactionStatus = "Success",
+                        TransId = "PAYID-MXPGHDI82U242769W004564A",
+                        UserId = 2,
+                        Datum = DateTime.Now
+                    }
+                );
+
+        }
 
         }
     }

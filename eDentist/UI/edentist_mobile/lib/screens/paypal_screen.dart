@@ -34,7 +34,8 @@ class _PaypalScreenState extends State<PaypalScreen> {
   @override
   void initState() {
     super.initState();
-
+    print(widget.userId);
+    print(DateTime.now());
     _productProvider = Provider.of<ProductProvider>(context, listen: false);
     _transakcijaProvider =
         Provider.of<TransakcijaProvider>(context, listen: false);
@@ -75,13 +76,14 @@ class _PaypalScreenState extends State<PaypalScreen> {
         onSuccess: (Map params) async {
           print("onSuccess: $params");
           if (params['data']['state'] == 'approved') {
-            print("USLO OVDJEEEEEEEEEEEEEEEEEEEEEEE-----------------");
             Transakcija request = Transakcija(
               null,
               widget.narudzbaId,
               widget.iznos,
               params['data']['state'],
               params['data']['id'],
+              widget.userId,
+              DateTime.now()
             );
             await _transakcijaProvider.insert(request);
 

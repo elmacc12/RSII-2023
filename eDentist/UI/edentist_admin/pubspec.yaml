@@ -45,6 +45,7 @@ dependencies:
   pdf: ^3.10.7
   printing: ^5.11.1
   google_fonts: ^6.2.0
+  syncfusion_flutter_datepicker: ^20.2.45
 
 dev_dependencies:
   json_serializable: ^6.2.0

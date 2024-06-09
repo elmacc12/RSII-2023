@@ -18,5 +18,8 @@ namespace eDentist.Services.Database
         public DateTime Datum { get; set; }
         public string Vrijeme { get; set; }
         public bool TerminZatvoren { get; set; }
+        [ForeignKey("UserIdDentist")]
+        public User? UserDentist { get; set; }
+        public int? UserIdDentist { get; set; }
     }
 }

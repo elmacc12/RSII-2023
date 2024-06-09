@@ -7,11 +7,13 @@ part of 'transakcija.dart';
 // **************************************************************************
 
 Transakcija _$TransakcijaFromJson(Map<String, dynamic> json) => Transakcija(
-      json['transkcijaId'] as int?,
-      json['orderHeaderId'] as int?,
-      json['amount'] as int?,
+      (json['transkcijaId'] as num?)?.toInt(),
+      (json['orderHeaderId'] as num?)?.toInt(),
+      (json['amount'] as num?)?.toInt(),
       json['transactionStatus'] as String?,
       json['transId'] as String?,
+      (json['userId'] as num?)?.toInt(),
+      json['datum'] == null ? null : DateTime.parse(json['datum'] as String),
     );
 
 Map<String, dynamic> _$TransakcijaToJson(Transakcija instance) =>
@@ -21,4 +23,6 @@ Map<String, dynamic> _$TransakcijaToJson(Transakcija instance) =>
       'amount': instance.amount,
       'transactionStatus': instance.transactionStatus,
       'transId': instance.transId,
+      'userId': instance.userId,
+      'datum': instance.datum?.toIso8601String(),
     };

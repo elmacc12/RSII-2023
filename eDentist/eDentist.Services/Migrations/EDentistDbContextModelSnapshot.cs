@@ -39,6 +39,9 @@ namespace eDentist.Services.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserIdDentist")
+                        .HasColumnType("int");
+
                     b.Property<string>("Vrijeme")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -47,15 +50,18 @@ namespace eDentist.Services.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("UserIdDentist");
+
                     b.ToTable("Appointments");
 
                     b.HasData(
                         new
                         {
                             AppointmentID = 1,
-                            Datum = new DateTime(2024, 4, 7, 11, 11, 51, 201, DateTimeKind.Local).AddTicks(6716),
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 924, DateTimeKind.Local).AddTicks(9679),
                             TerminZatvoren = false,
                             UserId = 2,
+                            UserIdDentist = 1,
                             Vrijeme = "10:00 AM"
                         });
                 });
@@ -184,6 +190,36 @@ namespace eDentist.Services.Migrations
                             CountryId = 1,
                             ZipCode = "73300"
                         });
+                });
+
+            modelBuilder.Entity("eDentist.Services.Database.Comment", b =>
+                {
+                    b.Property<int>("CommentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentID"));
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Datum")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentID");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("eDentist.Services.Database.Country", b =>
@@ -350,7 +386,7 @@ namespace eDentist.Services.Migrations
                             DentalServiceId = 1,
                             DoctorsOppinion = "Sample Doctors Opinion",
                             UserId = 2,
-                            datumDijagnoze = new DateTime(2024, 4, 7, 11, 11, 51, 201, DateTimeKind.Local).AddTicks(6796)
+                            datumDijagnoze = new DateTime(2024, 6, 9, 14, 3, 40, 924, DateTimeKind.Local).AddTicks(9731)
                         });
                 });
 
@@ -734,105 +770,105 @@ namespace eDentist.Services.Migrations
                         new
                         {
                             OrderHeaderId = 1,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(1884),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(3881),
                             TotalPrice = 10,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 2,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(1935),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(3920),
                             TotalPrice = 20,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 3,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(1979),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(3955),
                             TotalPrice = 30,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 4,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2008),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(3975),
                             TotalPrice = 40,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 5,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2066),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4025),
                             TotalPrice = 50,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 6,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2094),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4045),
                             TotalPrice = 60,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 7,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2120),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4064),
                             TotalPrice = 70,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 8,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2146),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4084),
                             TotalPrice = 80,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 9,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2172),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4104),
                             TotalPrice = 90,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 10,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2226),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4151),
                             TotalPrice = 100,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 11,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2253),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4171),
                             TotalPrice = 110,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 12,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2279),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4191),
                             TotalPrice = 120,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 13,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2305),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4209),
                             TotalPrice = 130,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 14,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2360),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4227),
                             TotalPrice = 140,
                             UserId = 2
                         },
                         new
                         {
                             OrderHeaderId = 15,
-                            OrderDate = new DateTime(2024, 4, 7, 11, 11, 51, 202, DateTimeKind.Local).AddTicks(2386),
+                            OrderDate = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4275),
                             TotalPrice = 150,
                             UserId = 2
                         });
@@ -1134,6 +1170,9 @@ namespace eDentist.Services.Migrations
                     b.Property<double?>("Amount")
                         .HasColumnType("float");
 
+                    b.Property<DateTime?>("Datum")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("OrderHeaderId")
                         .HasColumnType("int");
 
@@ -1143,9 +1182,14 @@ namespace eDentist.Services.Migrations
                     b.Property<string>("TransactionStatus")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("TranskcijaId");
 
                     b.HasIndex("OrderHeaderId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Transactions");
 
@@ -1154,121 +1198,201 @@ namespace eDentist.Services.Migrations
                         {
                             TranskcijaId = 1,
                             Amount = 10.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(3898),
                             OrderHeaderId = 1,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 2,
                             Amount = 20.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(3925),
                             OrderHeaderId = 2,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 3,
                             Amount = 30.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(3960),
                             OrderHeaderId = 3,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 4,
                             Amount = 40.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(3980),
                             OrderHeaderId = 4,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 5,
                             Amount = 50.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4030),
                             OrderHeaderId = 5,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 6,
                             Amount = 60.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4050),
                             OrderHeaderId = 6,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 7,
                             Amount = 70.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4070),
                             OrderHeaderId = 7,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 8,
                             Amount = 80.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4089),
                             OrderHeaderId = 8,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 9,
                             Amount = 90.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4109),
                             OrderHeaderId = 9,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 10,
                             Amount = 100.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4156),
                             OrderHeaderId = 10,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 11,
                             Amount = 110.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4176),
                             OrderHeaderId = 11,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 12,
                             Amount = 120.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4196),
                             OrderHeaderId = 12,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 13,
                             Amount = 130.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4214),
                             OrderHeaderId = 13,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 14,
                             Amount = 140.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4260),
                             OrderHeaderId = 14,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
                         },
                         new
                         {
                             TranskcijaId = 15,
                             Amount = 150.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4280),
                             OrderHeaderId = 15,
                             TransId = "PAYID-MXPGHDI82U242769W004564J",
-                            TransactionStatus = "Success"
+                            TransactionStatus = "Success",
+                            UserId = 2
+                        });
+                });
+
+            modelBuilder.Entity("eDentist.Services.Database.TransakcijaZaUslugu", b =>
+                {
+                    b.Property<int>("TranskcijaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TranskcijaId"));
+
+                    b.Property<double?>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("Datum")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DentalServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SvrhaUplate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TranskcijaId");
+
+                    b.HasIndex("DentalServiceId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TransakcijaZaUslugu");
+
+                    b.HasData(
+                        new
+                        {
+                            TranskcijaId = 1,
+                            Amount = 50.0,
+                            Datum = new DateTime(2024, 6, 9, 14, 3, 40, 925, DateTimeKind.Local).AddTicks(4297),
+                            DentalServiceId = 1,
+                            TransId = "PAYID-MXPGHDI82U242769W004564A",
+                            TransactionStatus = "Success",
+                            UserId = 2
                         });
                 });
 
@@ -1360,7 +1484,13 @@ namespace eDentist.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("eDentist.Services.Database.User", "UserDentist")
+                        .WithMany()
+                        .HasForeignKey("UserIdDentist");
+
                     b.Navigation("User");
+
+                    b.Navigation("UserDentist");
                 });
 
             modelBuilder.Entity("eDentist.Services.Database.City", b =>
@@ -1371,6 +1501,25 @@ namespace eDentist.Services.Migrations
                         .HasConstraintName("fk_country_city");
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("eDentist.Services.Database.Comment", b =>
+                {
+                    b.HasOne("eDentist.Services.Database.BlogPost", "Blog")
+                        .WithMany()
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eDentist.Services.Database.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("eDentist.Services.Database.Favorite", b =>
@@ -1450,7 +1599,28 @@ namespace eDentist.Services.Migrations
                         .WithMany()
                         .HasForeignKey("OrderHeaderId");
 
+                    b.HasOne("eDentist.Services.Database.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("OrderHeader");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("eDentist.Services.Database.TransakcijaZaUslugu", b =>
+                {
+                    b.HasOne("eDentist.Services.Database.DentalService", "DentalService")
+                        .WithMany()
+                        .HasForeignKey("DentalServiceId");
+
+                    b.HasOne("eDentist.Services.Database.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("DentalService");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("eDentist.Services.Database.User", b =>

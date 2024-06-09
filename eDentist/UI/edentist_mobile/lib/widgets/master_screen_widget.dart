@@ -6,6 +6,7 @@ import 'package:edentist_mobile/screens/cart_screen.dart';
 import 'package:edentist_mobile/screens/favorites_screen.dart';
 import 'package:edentist_mobile/screens/login_screen.dart';
 import 'package:edentist_mobile/screens/medicalCard_page.dart';
+import 'package:edentist_mobile/screens/pregled_transakcijaZaUsluge.dart';
 import 'package:edentist_mobile/screens/termini_page.dart';
 import 'package:edentist_mobile/utils/util.dart';
 import 'package:flutter/material.dart';
@@ -122,7 +123,17 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 );
               },
             ),
-            ListTile(
+             ListTile(
+              title: Text('Moje uplate'),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PregledTransakcijaScreen(),
+                  ),
+                );
+              },
+            ),
+             ListTile(
               title: Text('Odjavi se'),
               onTap: () {
                 final korisniciProvider =

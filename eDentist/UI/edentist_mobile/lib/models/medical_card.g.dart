@@ -7,9 +7,9 @@ part of 'medical_card.dart';
 // **************************************************************************
 
 MedicalCard _$MedicalCardFromJson(Map<String, dynamic> json) => MedicalCard(
-      json['medicalCardId'] as int,
-      json['userId'] as int,
-      json['dentalServiceId'] as int?,
+      (json['medicalCardId'] as num).toInt(),
+      (json['userId'] as num).toInt(),
+      (json['dentalServiceId'] as num?)?.toInt(),
       json['doctorsOppinion'] as String?,
       DateTime.parse(json['datumDijagnoze'] as String),
     );

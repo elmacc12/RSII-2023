@@ -39,6 +39,8 @@ public partial class EDentistDbContext : DbContext
     public virtual DbSet<RecommendResult> RecommendResult { get; set; }
     public virtual DbSet<Transactions> Transactions { get; set; }
     public virtual DbSet<BlogPost> BlogPosts { get; set; }
+    public virtual DbSet<TransakcijaZaUslugu> TransakcijaZaUslugu { get; set; }
+    public virtual DbSet<Comment> Comment { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<City>(entity =>

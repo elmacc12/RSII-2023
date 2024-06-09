@@ -8,10 +8,10 @@ part of 'dental_service.dart';
 
 DentalService _$DentalServiceFromJson(Map<String, dynamic> json) =>
     DentalService(
-      json['dentalServiceId'] as int,
+      (json['dentalServiceId'] as num).toInt(),
       json['serviceName'] as String?,
       json['serviceDescription'] as String?,
-      json['servicePrice'] as int,
+      (json['servicePrice'] as num).toInt(),
     );
 
 Map<String, dynamic> _$DentalServiceToJson(DentalService instance) =>

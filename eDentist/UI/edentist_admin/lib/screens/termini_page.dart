@@ -88,7 +88,6 @@ class _TerminiPageState extends State<TerminiPage> {
 
     return Container(
       width: double.infinity,
-      //padding: const EdgeInsets.all(8),
       child: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -97,10 +96,11 @@ class _TerminiPageState extends State<TerminiPage> {
               DataColumn(label: Text('Pacijent')),
               DataColumn(label: Text('Datum')),
               DataColumn(label: Text('Vrijeme')),
-              DataColumn(label: Text('Otkaži')),
-              DataColumn(label: Text('Uredi')),
+              DataColumn(label: Text('Obriši')),
+              DataColumn(label: Text('Status')),
             ],
             rows: _termin.map((termin) {
+              bool isPast = termin.datum.isBefore(DateTime.now());
               return DataRow(
                 cells: [
                   DataCell(Text(termin.userId.toString())),
@@ -115,19 +115,25 @@ class _TerminiPageState extends State<TerminiPage> {
                       style:
                           ElevatedButton.styleFrom(backgroundColor: Colors.red),
                       child:
-                          Text('Otkaži', style: TextStyle(color: Colors.white)),
+                          Text('Obriši', style: TextStyle(color: Colors.white)),
                     ),
                   ),
                   DataCell(
-                    ElevatedButton(
-                      onPressed: () {
-                        _navigateToTerminDetailScreen(termin, termin.userId);
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue),
-                      child:
-                          Text('Uredi', style: TextStyle(color: Colors.white)),
-                    ),
+                    isPast
+                        ? Text(
+                            'Termin zatvoren',
+                            style: TextStyle(color: Colors.red),
+                          )
+                        : ElevatedButton(
+                            onPressed: () {
+                              _navigateToTerminDetailScreen(
+                                  termin, termin.userId);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue),
+                            child: Text('Uredi',
+                                style: TextStyle(color: Colors.white)),
+                          ),
                   ),
                 ],
               );
@@ -165,8 +171,8 @@ class _TerminiPageState extends State<TerminiPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Potvrdi otkazivanje'),
-          content: Text('Da li želite otkazati dati termin'),
+          title: Text('Potvrdi brisanje'),
+          content: Text('Da li želite ukloniti dati termin'),
           actions: [
             TextButton(
               onPressed: () {
@@ -179,7 +185,7 @@ class _TerminiPageState extends State<TerminiPage> {
                 await _deleteTermin(termin);
                 Navigator.of(context).pop();
               },
-              child: Text('Otkaži'),
+              child: Text('Obriši'),
             ),
           ],
         );

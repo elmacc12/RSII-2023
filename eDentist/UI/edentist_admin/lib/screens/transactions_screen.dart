@@ -11,31 +11,52 @@ class TransactionsPage extends StatefulWidget {
   const TransactionsPage({Key? key}) : super(key: key);
 
   @override
-  _TransactionsPagePageState createState() => _TransactionsPagePageState();
+  _TransactionsPageState createState() => _TransactionsPageState();
 }
 
-class _TransactionsPagePageState extends State<TransactionsPage> {
+class _TransactionsPageState extends State<TransactionsPage> {
   late TransactionsProvider _transactionProvider;
   List<Transactions> transakcije = [];
+  int? _selectedYear;
+  int? _selectedMonth;
+
+  List<int> years = List.generate(DateTime.now().year - 2010 + 1, (index) => 2010 + index).reversed.toList();
+  List<int> months = List.generate(12, (index) => index + 1);
 
   @override
   void initState() {
     super.initState();
-    _transactionProvider =
-        Provider.of<TransactionsProvider>(context, listen: false);
-    _fetchBlogs();
+    _transactionProvider = Provider.of<TransactionsProvider>(context, listen: false);
+    _fetchTransactions();
   }
 
-  Future<void> _fetchBlogs() async {
+  Future<void> _fetchTransactions() async {
     try {
       var data = await _transactionProvider.get();
 
       setState(() {
-        transakcije = data.result;
+        transakcije = data.result.where((transaction) =>
+            (_selectedYear == null || transaction.datum?.year == _selectedYear) &&
+            (_selectedMonth == null || transaction.datum?.month == _selectedMonth)
+        ).toList();
       });
     } catch (e) {
       print(e);
     }
+  }
+
+  void _onYearChanged(int? year) {
+    setState(() {
+      _selectedYear = year;
+    });
+    _fetchTransactions();
+  }
+
+  void _onMonthChanged(int? month) {
+    setState(() {
+      _selectedMonth = month;
+    });
+    _fetchTransactions();
   }
 
   @override
@@ -47,6 +68,49 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
       ),
       body: Column(
         children: [
+          SizedBox(height: 16),
+          Text('Izaberite datum', style: TextStyle(fontSize: 18)),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DropdownButton<int>(
+                hint: Text('Godina', style: TextStyle(color: Colors.black)),
+                value: _selectedYear,
+                onChanged: _onYearChanged,
+                items: [
+                  DropdownMenuItem<int>(
+                    value: null,
+                    child: Text('All'),
+                  ),
+                  ...years.map((year) {
+                    return DropdownMenuItem<int>(
+                      value: year,
+                      child: Text(year.toString()),
+                    );
+                  }).toList(),
+                ],
+              ),
+              SizedBox(width: 16),
+              DropdownButton<int>(
+                hint: Text('Mjesec', style: TextStyle(color: Colors.black)),
+                value: _selectedMonth,
+                onChanged: _onMonthChanged,
+                items: [
+                  DropdownMenuItem<int>(
+                    value: null,
+                    child: Text('All'),
+                  ),
+                  ...months.map((month) {
+                    return DropdownMenuItem<int>(
+                      value: month,
+                      child: Text(month.toString()),
+                    );
+                  }).toList(),
+                ],
+              ),
+            ],
+          ),
           SizedBox(height: 20),
           BlueButton(
             text: 'Kreiraj izvještaj',
@@ -89,7 +153,7 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
         children: [
           ListTile(
             title: Text("Uplata za narudzbu: ${t.orderHeaderId.toString()}"),
-            subtitle: Text("Iznos uplate:${t.amount}"),
+            subtitle: Text("Iznos uplate: ${t.amount}"),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -108,8 +172,7 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
     );
   }
 
-  Future<pw.Document> _generateSingleTransactionPDF(
-      Transactions transaction) async {
+  Future<pw.Document> _generateSingleTransactionPDF(Transactions transaction) async {
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -123,8 +186,7 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
               padding: pw.EdgeInsets.all(20),
               child: pw.Column(
                 children: [
-                  pw.Text('Detalji transakcije',
-                      style: pw.TextStyle(fontSize: 20)),
+                  pw.Text('Detalji transakcije', style: pw.TextStyle(fontSize: 20)),
                   pw.SizedBox(height: 20),
                   _generateSingleTransactionPDFContent(transaction),
                 ],
@@ -167,6 +229,11 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
 
   Future<pw.Document> _generatePDFReport() async {
     final pdf = pw.Document();
+    final totalAmount = transakcije.fold<double>(0, (sum, item) => sum + (item.amount ?? 0));
+
+    final String headerText = _selectedMonth != null && _selectedYear != null
+        ? 'Pregled svih transakcija za mjesec: $_selectedMonth godina: $_selectedYear'
+        :(_selectedMonth != null ? 'Pregled svih uplata za mjesec: $_selectedMonth':(_selectedYear != null?'Pregled svih uplata za godinu: $_selectedYear':'Pregled svih uplata'));
 
     pdf.addPage(
       pw.Page(
@@ -179,8 +246,9 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
               padding: pw.EdgeInsets.all(20),
               child: pw.Column(
                 children: [
-                  pw.Text('Pregled svih uplata',
-                      style: pw.TextStyle(fontSize: 20)),
+                  pw.Text(headerText, style: pw.TextStyle(fontSize: 20)),
+                  pw.SizedBox(height: 20),
+                  pw.Text('Ukupno: ${totalAmount}', style: pw.TextStyle(fontSize: 18)),
                   pw.SizedBox(height: 20),
                   _generatePDFContent(),
                 ],
@@ -202,22 +270,20 @@ class _TransactionsPagePageState extends State<TransactionsPage> {
 
   pw.Widget _generatePDFContent() {
     return pw.Column(
-      children: transakcije
-          .map((e) => pw.Column(
-                children: [
-                  pw.Row(
-                    children: [
-                      pw.Text('Narudzba: ${e.orderHeaderId}'),
-                    ],
-                  ),
-                  pw.Row(
-                    children: [
-                      pw.Text('Iznos transakcije: ${e.amount}'),
-                    ],
-                  ),
-                ],
-              ))
-          .toList(),
+      children: transakcije.map((e) => pw.Column(
+        children: [
+          pw.Row(
+            children: [
+              pw.Text('Narudzba: ${e.orderHeaderId}'),
+            ],
+          ),
+          pw.Row(
+            children: [
+              pw.Text('Iznos transakcije: ${e.amount}'),
+            ],
+          ),
+        ],
+      )).toList(),
     );
   }
 }

@@ -7,12 +7,12 @@ part of 'order_header.dart';
 // **************************************************************************
 
 OrderHeader _$OrderHeaderFromJson(Map<String, dynamic> json) => OrderHeader(
-      json['orderHeaderId'] as int,
+      (json['orderHeaderId'] as num).toInt(),
       json['orderDate'] == null
           ? null
           : DateTime.parse(json['orderDate'] as String),
-      json['userId'] as int?,
-      json['totalPrice'] as int?,
+      (json['userId'] as num?)?.toInt(),
+      (json['totalPrice'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$OrderHeaderToJson(OrderHeader instance) =>

@@ -1,4 +1,5 @@
 import 'package:edentist_mobile/models/blog_post.dart';
+import 'package:edentist_mobile/models/user.dart';
 import 'package:edentist_mobile/providers/blogpost_provider.dart';
 import 'package:edentist_mobile/screens/blog_details_screen.dart';
 import 'package:flutter/material.dart';
