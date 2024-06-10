@@ -2,9 +2,11 @@
 using eDentist.Model.Requests;
 using eDentist.Model.SearchObjects;
 using eDentist.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eDentist.Controllers
 {
+    [AllowAnonymous]
     public class BlogPostController : BaseCrudController<BlogPostModel, BaseSearchObject, BlogPostUpsertRequest, BlogPostUpsertRequest>
     {
 

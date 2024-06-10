@@ -117,7 +117,13 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
             hintText: 'Unesite svoj komentar',
             suffixIcon: IconButton(
               icon: Icon(Icons.send),
-              onPressed: _postComment,
+              onPressed:() {
+              if (LoggedIn.isLoggedIn) {
+                _postComment();
+              } else {
+                _showLoginDialog();
+              }
+            },
             ),
           ),
         ),
@@ -141,7 +147,25 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
       });
     }
   }
-
+void _showLoginDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Log In Required'),
+        content: Text('Molim vas logirajte se kako biste mogli ostaviti komentar.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
   Widget _buildComments() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

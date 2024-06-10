@@ -10,7 +10,7 @@ namespace eDentist.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-
+    [AllowAnonymous]
     public class ProductsController : BaseCrudController<ProductModel, ProductSearchObject, ProductInsertRequest, ProductUpdateRequest>
     {
         public ProductsController(ILogger<BaseController<ProductModel, ProductSearchObject>> logger, IProductService service) : base(logger,service)

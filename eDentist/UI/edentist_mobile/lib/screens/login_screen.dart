@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                           LogIn object = LogIn(username, password);
                           try {
                             await _logInProvider.post(data: object.toJson());
-
+                            LoggedIn.isLoggedIn=true;
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) => const ProductListScreen(),
@@ -120,6 +120,24 @@ class _LoginPageState extends State<LoginPage> {
                         child: const SizedBox(
                           width: double.infinity,
                           child: Center(child: Text("Registruj se")),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      const Text("Pregledajte proizvode"),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductListScreen(),
+                            ),
+                          );
+                        },
+                        child: const SizedBox(
+                          width: double.infinity,
+                          child: Center(child: Text("Pregled proizvoda")),
                         ),
                       ),
                     ],

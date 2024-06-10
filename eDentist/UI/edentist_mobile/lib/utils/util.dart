@@ -11,6 +11,10 @@ Image imageFromBase64String(String base64Image) {
   return Image.memory(base64Decode(base64Image));
 }
 
+class LoggedIn{
+  static bool isLoggedIn = false;
+}
+
 // String formatNumber(dynamic) {
 //   var f = NumberFormat('###,00');
 

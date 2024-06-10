@@ -85,7 +85,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(
+                      LoggedIn.isLoggedIn ? ElevatedButton(
                         onPressed: () async {
                           final isProductFavorite = await _favoritesProvider
                               .exists(widget.product.productId);
@@ -125,8 +125,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red),
                         child: Text("Dodaj u omiljene"),
-                      ),
-                      ElevatedButton(
+                      ):Container(),
+                      LoggedIn.isLoggedIn? ElevatedButton(
                         onPressed: () {
                           _cartProvider.addToCart(widget.product);
                           ScaffoldMessenger.of(context)
@@ -139,7 +139,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue),
                         child: Text("Dodaj u košaricu"),
-                      ),
+                      ):Container(),
                     ],
                   ),
                 ],

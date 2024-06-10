@@ -14,5 +14,6 @@ class UserProvider extends BaseProvider<User> {
   void logout() {
     Authorization.username = null;
     Authorization.password = null;
+    LoggedIn.isLoggedIn=false;
   }
 }

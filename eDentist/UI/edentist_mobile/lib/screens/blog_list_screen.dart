@@ -78,7 +78,6 @@ class _BlogListPageState extends State<BlogListPage> {
                 ),
               );
             },
-            // Add more widgets to display other blog details as needed
           ),
         ],
       ),

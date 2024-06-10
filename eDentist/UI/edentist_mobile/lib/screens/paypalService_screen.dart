@@ -64,7 +64,7 @@ class _PaypalScreenServiceState extends State<PaypalScreenService> {
           print("onSuccess: $params");
           if (params['data']['state'] == 'approved') {
             TransakcijaZaUslugu request = TransakcijaZaUslugu(
-              null,
+              0,
               widget.dentalServiceId,
               widget.amount,
               params['data']['state'],

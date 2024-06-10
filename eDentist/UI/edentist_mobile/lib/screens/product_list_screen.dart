@@ -183,7 +183,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   Text(x.productName ?? ""),
                   Text("${x.productPrice.toString()} KM"),
                   Row(
-                    children: [
+                    children: [LoggedIn.isLoggedIn?
                       IconButton(
                         icon: Icon(Icons.shopping_cart),
                         onPressed: () async {
@@ -254,8 +254,24 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             ));
                           }
                         },
-                      ),
-                      IconButton(
+                      ):IconButton(onPressed: (){showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Log In Required'),
+        content: Text('Please log in to proceed.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );}, icon: Icon(Icons.shopping_cart)),
+                     LoggedIn.isLoggedIn? IconButton(
                         icon: Icon(Icons.favorite),
                         onPressed: () async {
                           final isProductFavorite =
@@ -295,7 +311,23 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             );
                           }
                         },
-                      ),
+                      ):IconButton(onPressed: (){showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Log In Required'),
+        content: Text('Please log in to proceed.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );}, icon: Icon(Icons.favorite)),
                     ],
                   ),
                 ],

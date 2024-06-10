@@ -1,9 +1,7 @@
 ﻿using eDentist.Model;
 using eDentist.Model.Requests;
 using eDentist.Model.SearchObjects;
-using eDentist.Services.Database;
 using eDentist.Services.Interfaces;
-using eDentist.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

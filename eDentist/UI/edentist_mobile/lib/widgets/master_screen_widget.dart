@@ -42,6 +42,27 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         .firstWhere((korisnik) => korisnik.username == Authorization.username);
   }
 
+ void _showLoginMessage(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Log In Required'),
+        content: Text('Logirajte se kako bi mogli nastaviti.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,26 +75,34 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               Icons.favorite,
               color: Colors.black,
             ),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => FavoritesScreen(),
-                ),
-              );
-            },
+            onPressed: LoggedIn.isLoggedIn
+                ? () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => FavoritesScreen(),
+                      ),
+                    );
+                  }
+                : () {
+                    _showLoginMessage(context);
+                  },
           ),
           IconButton(
             icon: Icon(
               Icons.shopping_cart,
               color: Colors.black,
             ),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CartScreen(),
-                ),
-              );
-            },
+            onPressed: LoggedIn.isLoggedIn
+                ? () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CartScreen(),
+                      ),
+                    );
+                  }
+                : () {
+                    _showLoginMessage(context);
+                  },
           ),
         ],
       ),
@@ -95,13 +124,17 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ),
             ListTile(
               title: Text('Termini'),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => TerminiPage(),
-                  ),
-                );
-              },
+              onTap: LoggedIn.isLoggedIn
+                ? () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => TerminiPage(),
+                      ),
+                    );
+                  }
+                : () {
+                    _showLoginMessage(context);
+                  },
             ),
             ListTile(
               title: Text('Blog'),
@@ -115,25 +148,33 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ),
             ListTile(
               title: Text('Moj karton'),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => MedicalCardPage(user: pacijent),
-                  ),
-                );
-              },
+              onTap:LoggedIn.isLoggedIn
+                ? () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MedicalCardPage(user: pacijent),
+                      ),
+                    );
+                  }
+                : () {
+                    _showLoginMessage(context);
+                  },
             ),
              ListTile(
               title: Text('Moje uplate'),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => PregledTransakcijaScreen(),
-                  ),
-                );
-              },
+              onTap: LoggedIn.isLoggedIn
+                ? () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PregledTransakcijaScreen(),
+                      ),
+                    );
+                  }
+                : () {
+                    _showLoginMessage(context);
+                  },
             ),
-             ListTile(
+             LoggedIn.isLoggedIn ? ListTile(
               title: Text('Odjavi se'),
               onTap: () {
                 final korisniciProvider =
@@ -146,6 +187,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   (route) => false,
                 );
               },
+            ):ListTile(
+              title: Text('Log In'),
+              onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
+                  }
             ),
           ],
         ),
