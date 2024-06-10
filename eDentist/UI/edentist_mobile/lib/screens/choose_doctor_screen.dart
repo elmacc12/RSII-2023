@@ -41,11 +41,12 @@ class _ChooseDoctorPageState extends State<ChooseDoctorScreen> {
   }
 
   void _navigateToAddAppointmentPage(int userId) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
+    Navigator.pushReplacement(
+  context,
+ MaterialPageRoute(
         builder: (context) => AddAppointmentPage(termin: widget.termin, doctorId: userId),
       ),
-    );
+);
   }
 
   @override

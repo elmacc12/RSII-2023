@@ -1,3 +1,4 @@
+import 'package:eprodaja_admin/models/transakcijaZaUslugu.dart';
 import 'package:eprodaja_admin/providers/user_provider.dart';
 import 'package:eprodaja_admin/screens/blog_screen.dart';
 import 'package:eprodaja_admin/screens/dental_service_page.dart';
@@ -9,6 +10,7 @@ import 'package:eprodaja_admin/screens/pregled_zaposlenika.dart';
 import 'package:eprodaja_admin/screens/products_page.dart';
 import 'package:eprodaja_admin/screens/termini_page.dart';
 import 'package:eprodaja_admin/screens/transactions_screen.dart';
+import 'package:eprodaja_admin/screens/transakcija_za_uslugu_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -129,7 +131,7 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   BlueButton(
-                    text: 'Pregled uplata',
+                    text: 'Pregled uplata za narudzbe',
                     height: 80.0,
                     width: double.infinity,
                     onPressed: () {
@@ -137,6 +139,19 @@ class HomePage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => TransactionsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                   BlueButton(
+                    text: 'Pregled uplata za usluge',
+                    height: 80.0,
+                    width: double.infinity,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TransactionsForServicePage(),
                         ),
                       );
                     },

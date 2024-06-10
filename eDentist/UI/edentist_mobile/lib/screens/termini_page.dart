@@ -137,6 +137,17 @@ class _TerminiPageState extends State<TerminiPage> {
   }
 
   void _showDeleteConfirmationDialog(Appointment termin) {
+    final now = DateTime.now();
+    final daysDifference = termin.datum.difference(now).inDays;
+
+    if (daysDifference < 4) {
+      _showContactDoctorDialog();
+    } else {
+      _showStandardDeleteDialog(termin);
+    }
+  }
+
+  void _showStandardDeleteDialog(Appointment termin) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -156,6 +167,26 @@ class _TerminiPageState extends State<TerminiPage> {
                 Navigator.of(context).pop();
               },
               child: Text('Otkaži'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showContactDoctorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Ne može se otkazati termin'),
+          content: Text('Za otkazivanje termina unutar 4 dana prije termina, molimo kontaktirajte svog doktora.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('U redu'),
             ),
           ],
         );

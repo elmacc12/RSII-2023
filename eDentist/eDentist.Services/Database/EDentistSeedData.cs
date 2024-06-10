@@ -425,7 +425,8 @@ namespace eDentist.Services.Database
                         TransactionStatus = "Success",
                         TransId = "PAYID-MXPGHDI82U242769W004564A",
                         UserId = 2,
-                        Datum = DateTime.Now
+                        Datum = DateTime.Now,
+                        SvrhaUplate = "Svrha"
                     }
                 );
 
