@@ -2,6 +2,7 @@ import 'package:eprodaja_admin/models/dental_service.dart';
 import 'package:eprodaja_admin/models/transakcijaZaUslugu.dart';
 import 'package:eprodaja_admin/providers/dentalService_provider.dart';
 import 'package:eprodaja_admin/providers/transakcijaZaUslugu_provider.dart';
+import 'package:eprodaja_admin/screens/reports_page.dart';
 import 'package:eprodaja_admin/widgets/blue_button.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
@@ -95,6 +96,17 @@ class _TransactionsForServicePageState extends State<TransactionsForServicePage>
       appBar: AppBar(
         title: Text('Lista transakcija', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue,
+        actions: [
+          ElevatedButton(
+            child: Text("Otvori reporte"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ReportsPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [

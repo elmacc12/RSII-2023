@@ -4,6 +4,7 @@ import 'package:eprodaja_admin/providers/city_provider.dart';
 import 'package:eprodaja_admin/providers/color_prvider.dart';
 import 'package:eprodaja_admin/providers/dentalService_provider.dart';
 import 'package:eprodaja_admin/providers/login_provider.dart';
+import 'package:eprodaja_admin/providers/medical_card_provider.dart';
 import 'package:eprodaja_admin/providers/order_details_provider.dart';
 import 'package:eprodaja_admin/providers/orders_provider.dart';
 import 'package:eprodaja_admin/providers/product_provider.dart';
@@ -74,6 +75,8 @@ class MyMaterialApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CityProvider()),
         ChangeNotifierProvider(create: (_) => RecommendResultProvider()),
         ChangeNotifierProvider(create: (_) => TransakcijaZaUsluguProvider()),
+        ChangeNotifierProvider(create: (_) => MedicalCardProvider()),
+
 
       ],
       child: MaterialApp(

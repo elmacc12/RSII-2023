@@ -1,11 +1,14 @@
 import 'package:eprodaja_admin/models/transakcije.dart';
 import 'package:eprodaja_admin/providers/transakcije_provider.dart';
+import 'package:eprodaja_admin/screens/reports_page.dart';
 import 'package:eprodaja_admin/widgets/blue_button.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({Key? key}) : super(key: key);
@@ -19,6 +22,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   List<Transactions> transakcije = [];
   int? _selectedYear;
   int? _selectedMonth;
+  int userId = 1; // Replace with actual user ID
 
   List<int> years = List.generate(DateTime.now().year - 2010 + 1, (index) => 2010 + index).reversed.toList();
   List<int> months = List.generate(12, (index) => index + 1);
@@ -59,12 +63,40 @@ class _TransactionsPageState extends State<TransactionsPage> {
     _fetchTransactions();
   }
 
+Future<void> _savePDFReport(pw.Document pdf, String reportId) async {
+  await Printing.layoutPdf(onLayout: (format) async => pdf.save());
+
+  final directory = await getApplicationDocumentsDirectory();
+  final reportsPath = '${directory.path}/Reports';
+  final file = File('$reportsPath/${userId}_$reportId.pdf');
+
+
+  final reportsDir = Directory(reportsPath);
+  if (!await reportsDir.exists()) {
+    await reportsDir.create(recursive: true);
+  }
+
+  await file.writeAsBytes(await pdf.save());
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista transakcija', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue,
+        actions: [
+          ElevatedButton(
+            child: Text("Otvori reporte"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ReportsPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -118,7 +150,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
             height: 40,
             onPressed: () async {
               final pdf = await _generatePDFReport();
-              await _printPDFReport(pdf);
+              final reportId = DateTime.now().millisecondsSinceEpoch.toString();
+              await _savePDFReport(pdf, reportId);
             },
           ),
           Expanded(
@@ -163,7 +196,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
               height: 30,
               onPressed: () async {
                 final pdf = await _generateSingleTransactionPDF(t);
-                await _printPDFReport(pdf);
+                final reportId = DateTime.now().millisecondsSinceEpoch.toString();
+                await _savePDFReport(pdf, reportId);
               },
             ),
           ),
@@ -233,7 +267,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
     final String headerText = _selectedMonth != null && _selectedYear != null
         ? 'Pregled svih transakcija za mjesec: $_selectedMonth godina: $_selectedYear'
-        :(_selectedMonth != null ? 'Pregled svih uplata za mjesec: $_selectedMonth':(_selectedYear != null?'Pregled svih uplata za godinu: $_selectedYear':'Pregled svih uplata'));
+        : (_selectedMonth != null ? 'Pregled svih uplata za mjesec: $_selectedMonth' : (_selectedYear != null ? 'Pregled svih uplata za godinu: $_selectedYear' : 'Pregled svih uplata'));
 
     pdf.addPage(
       pw.Page(
@@ -260,12 +294,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
     );
 
     return pdf;
-  }
-
-  Future<void> _printPDFReport(pw.Document pdf) async {
-    await Printing.layoutPdf(
-      onLayout: (format) async => pdf.save(),
-    );
   }
 
   pw.Widget _generatePDFContent() {
