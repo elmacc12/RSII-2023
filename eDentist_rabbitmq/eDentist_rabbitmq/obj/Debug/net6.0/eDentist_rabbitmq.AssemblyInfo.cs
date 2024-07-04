@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("eDentist_rabbitmq")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+74f28a3323dd34f85880f16d73dc86fb39be0862")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("eDentist_rabbitmq")]
 [assembly: System.Reflection.AssemblyTitleAttribute("eDentist_rabbitmq")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

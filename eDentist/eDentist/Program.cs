@@ -3,6 +3,7 @@ using eDentist.Model.Requests;
 using eDentist.Services.Database;
 using eDentist.Services.Interfaces;
 using eDentist.Services.ProizvodiStateMachine;
+using eDentist.Services.RabbitMQ;
 using eDentist.Services.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,12 @@ builder.Services.AddTransient<IBlogPostService, BlogPostService>();
 builder.Services.AddTransient<ITransactionService, TransactionService>();
 builder.Services.AddTransient<ITransakcijaZaUsluguService,TransakcijaZaUsluguService>();
 builder.Services.AddTransient<ICommentService, CommentService>();
+
+
+builder.Services.AddTransient<IRabbitMQProducer, RabbitMQProducer>();
+builder.Services.AddTransient<ISendMail, SendMailService>();
+
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -101,59 +108,59 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-string hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitMQ";
-string username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
-string password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
-string virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
+//string hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitMQ";
+//string username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
+//string password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
+//string virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
 
 
 
-var factory = new ConnectionFactory
-{
-    HostName = hostname,
-    UserName = username,
-    Password = password,
-    VirtualHost = virtualHost,
-};
-using var connection = factory.CreateConnection();
-using var channel = connection.CreateModel();
+//var factory = new ConnectionFactory
+//{
+//    HostName = hostname,
+//    UserName = username,
+//    Password = password,
+//    VirtualHost = virtualHost,
+//};
+//using var connection = factory.CreateConnection();
+//using var channel = connection.CreateModel();
 
-channel.QueueDeclare(queue: "appointments",
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: true,
-                     arguments: null);
+//channel.QueueDeclare(queue: "appointments",
+//                     durable: false,
+//                     exclusive: false,
+//                     autoDelete: true,
+//                     arguments: null);
 
-Console.WriteLine(" [*] Waiting for messages.");
+//Console.WriteLine(" [*] Waiting for messages.");
 
-var consumer = new EventingBasicConsumer(channel);
+//var consumer = new EventingBasicConsumer(channel);
 
-consumer.Received += async (model, ea) =>
-{
-    var body = ea.Body.ToArray();
-    var message = Encoding.UTF8.GetString(body);
-    Console.WriteLine(message.ToString());
-    var termin = JsonSerializer.Deserialize<AppointmentInsertRequest>(message);
-    using (var scope = app.Services.CreateScope())
-    {
-        var appointmentService = scope.ServiceProvider.GetRequiredService<IAppointmentsService>();
+//consumer.Received += async (model, ea) =>
+//{
+//    var body = ea.Body.ToArray();
+//    var message = Encoding.UTF8.GetString(body);
+//    Console.WriteLine(message.ToString());
+//    var termin = JsonSerializer.Deserialize<AppointmentInsertRequest>(message);
+//    using (var scope = app.Services.CreateScope())
+//    {
+//        var appointmentService = scope.ServiceProvider.GetRequiredService<IAppointmentsService>();
 
-        if (termin != null)
-        {
-            try
-            {
-                await appointmentService.Insert(termin);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-    }
-};
+//        if (termin != null)
+//        {
+//            try
+//            {
+//                await appointmentService.Insert(termin);
+//            }
+//            catch (Exception e)
+//            {
+//                Console.WriteLine(e.Message);
+//            }
+//        }
+//    }
+//};
 
-channel.BasicConsume(queue: "appointments",
-                     autoAck: true,
-                     consumer: consumer);
+//channel.BasicConsume(queue: "appointments",
+//                     autoAck: true,
+//                     consumer: consumer);
 
 app.Run();
