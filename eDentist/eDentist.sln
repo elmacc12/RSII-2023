@@ -9,14 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eDentist.Model", "eDentist.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eDentist.Services", "eDentist.Services\eDentist.Services.csproj", "{AEF91734-FE94-4A05-9418-8B0699672477}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eDentist.Subscriber", "eDentist.Subscriber\eDentist.Subscriber.csproj", "{49826594-E815-476B-ACD8-67FC649A61D5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3AA45FC2-70DF-4A94-B983-0456AAC087B0}"
 	ProjectSection(SolutionItems) = preProject
 		Dockerfile = Dockerfile
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQConsumer", "RabbitMQConsumer\RabbitMQConsumer.csproj", "{C0ECF94C-0A7A-4DFC-ABD2-BA39725F10EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,14 +32,6 @@ Global
 		{AEF91734-FE94-4A05-9418-8B0699672477}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEF91734-FE94-4A05-9418-8B0699672477}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEF91734-FE94-4A05-9418-8B0699672477}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49826594-E815-476B-ACD8-67FC649A61D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49826594-E815-476B-ACD8-67FC649A61D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49826594-E815-476B-ACD8-67FC649A61D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49826594-E815-476B-ACD8-67FC649A61D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C0ECF94C-0A7A-4DFC-ABD2-BA39725F10EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0ECF94C-0A7A-4DFC-ABD2-BA39725F10EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0ECF94C-0A7A-4DFC-ABD2-BA39725F10EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0ECF94C-0A7A-4DFC-ABD2-BA39725F10EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
