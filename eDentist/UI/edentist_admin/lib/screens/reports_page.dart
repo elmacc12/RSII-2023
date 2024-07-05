@@ -37,20 +37,20 @@ class _ReportsPageState extends State<ReportsPage> {
     }
   }
 
+  Future<void> _openReport(File file) async {
+    if (await file.exists()) {
+      // Get the path of the file
+      final directory = await getApplicationDocumentsDirectory();
+      String filePath = '${directory.path}\\Reports';
 
-
-Future<void> _openReport(File file) async {
-  if (await file.exists()) {
-    // Get the path of the file
-    String filePath = file.path;
-
-    // Use Process.run to launch the default PDF viewer
-    await Process.run('explorer.exe', [filePath]);
-  } else {
-    // File not found or doesn't exist
-    print('File not found: ${file.path}');
+      // Use Process.run to launch the default PDF viewer
+      await Process.run('explorer.exe', [filePath]);
+    } else {
+      // File not found or doesn't exist
+      print('File not found: ${file.path}');
+    }
   }
-}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,4 +74,3 @@ Future<void> _openReport(File file) async {
     );
   }
 }
-
